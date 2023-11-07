@@ -18,15 +18,7 @@ import {
   resultLinkId?: number;
 }) => {
   const { deep, rootLinkId, obj, customMethods, resultLinkId } = options;
-  const { createSerialOperation } = import(
-    "@deep-foundation/deeplinks/imports/gql/index.js"
-  );
-  const { pascalCase } = import("case-anything");
-  const { default: debug } = import("debug");
-  const { default: util } = import("util");
   const logs: Array<any> = [];
-  const packageLog = debug("@deep-foundation/object-to-links-async-converter");
-  packageLog({ options });
 
   class ObjectToLinksConverter {
     reservedLinkIds: Array<number>;
@@ -52,16 +44,14 @@ import {
     }
 
     static getLogger(namespace: string) {
-      const getLoggerLogger = debug(this.getLogger.name);
-      getLoggerLogger({ options });
-      const resultLogger = packageLog.extend(
-        `${ObjectToLinksConverter.name}${namespace ? `:${namespace}` : ""}`,
-      );
-      resultLogger.enabled = true;
-      resultLogger.log = (...content: Array<any>) => {
-        logs.push(...content);
-      };
-      return resultLogger;
+      const logger = (value: any) =>  {
+        logs.push({ namespace, value });
+      } 
+        logger.namespace = namespace
+        logger.extend =  function(namespace: string) {
+          return ObjectToLinksConverter.getLogger(`${logger.namespace}${namespace}`);
+        }
+        return logger
     }
 
     static async applyContainTreeLinksDownToParentToMinilinks(
@@ -869,6 +859,9 @@ import {
     }
   }
 
+  const packageLog = ObjectToLinksConverter.getLogger("@deep-foundation/object-to-links-async-converter");
+  packageLog({ options });
+
   function getObjectToLinksConverterProxy(options: {
     target: ObjectToLinksConverter;
     customMethods?: Record<string, Function>;
@@ -890,24 +883,15 @@ import {
 
   try {
     const result = main();
-    return {
+    return JSON.stringify({
       result,
-      logs: util.inspect(logs, {
-        maxArrayLength: null,
-        depth: null,
-      }),
-    };
+      logs: logs,
+    });
   } catch (error) {
-    throw {
-      error: util.inspect(error, {
-        maxArrayLength: null,
-        depth: null,
-      }),
-      logs: util.inspect(logs, {
-        maxArrayLength: null,
-        depth: null,
-      }),
-    };
+    throw JSON.stringify({
+      error: error,
+      logs: logs,
+    });
   }
 
   async function main() {
