@@ -5,6 +5,7 @@ import {
   Table,
 } from "@deep-foundation/deeplinks/imports/client.js";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
+import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
 (options: {
   deep: DeepClient;
