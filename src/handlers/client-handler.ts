@@ -5,10 +5,6 @@ import {
   Table,
 } from "@deep-foundation/deeplinks/imports/client.js";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
-import {
-  Link,
-  MinilinksResult,
-} from "@deep-foundation/deeplinks/imports/minilinks.js";
 
 (options: {
   deep: DeepClient;
@@ -30,11 +26,6 @@ import {
       core: "@deep-foundation/core",
       boolean: "@deep-foundation/boolean",
     };
-    static requiredPackagesInMinilinks = {
-      ...this.requiredPackageNames,
-      objectToLinksConverter:
-        "@deep-foundation/object-to-links-async-converter",
-    };
 
     constructor(options: ObjectToLinksConverterOptions) {
       this.rootLink = options.rootLink;
@@ -52,22 +43,6 @@ import {
           return ObjectToLinksConverter.getLogger(`${logger.namespace}${namespace}`);
         }
         return logger
-    }
-
-    static async applyContainTreeLinksDownToParentToMinilinks(
-      options: ApplyContainTreeLinksDownToParentToMinilinksOptions,
-    ) {
-      const log = ObjectToLinksConverter.getLogger(
-        ObjectToLinksConverter.applyContainTreeLinksDownToParentToMinilinks
-          .name,
-      );
-      const links = (this.getContainTreeLinksDownToParent({
-        linkExp: options.linkExp,
-      })) as DeepClientResult<Link<number>[]>;
-      log({ links });
-      const minilinksApplyResult = options.minilinks.apply(links.data);
-      log({ minilinksApplyResult });
-      return minilinksApplyResult;
     }
 
     static async getContainTreeLinksDownToParent(
@@ -99,20 +74,6 @@ import {
         ObjectToLinksConverter.init.name,
       );
       const { obj } = options;
-      const containTreeLinksDownToCoreAndThisPackageLinkApplyMinilinksResult =
-        this.applyContainTreeLinksDownToParentToMinilinks({
-          linkExp: {
-            _or: Object.values(
-              ObjectToLinksConverter.requiredPackagesInMinilinks,
-            ).map((packageName) => ({
-              id: {
-                _id: [packageName],
-              },
-            })),
-          },
-          minilinks: deep.minilinks,
-        });
-      log({ containTreeLinksDownToCoreAndThisPackageLinkApplyMinilinksResult });
       const rootLink: Link<number> = options.rootLinkId
         ? deep.select(options.rootLinkId).then((result) => result.data[0])
         : deep
@@ -126,14 +87,6 @@ import {
             )
             .then((result) => result.data[0] as Link<number>);
       log({ rootLink });
-      const containTreeLinksDownToRootLinkApplyMinilinksResult =
-        this.applyContainTreeLinksDownToParentToMinilinks({
-          linkExp: {
-            id: rootLink.id,
-          },
-          minilinks: deep.minilinks,
-        });
-      log({ containTreeLinksDownToRootLinkApplyMinilinksResult });
       const linkIdsToReserveCount = this.getLinksToReserveCount({ value: obj });
       log({ linkIdsToReserveCount });
       const reservedLinkIds = deep.reserve(linkIdsToReserveCount);
@@ -348,7 +301,7 @@ import {
       deep.delete({
         up: {
           tree_id: deep.id(
-            ObjectToLinksConverter.requiredPackagesInMinilinks.core,
+            "@deep-foundation/core",
             "ContainTree",
           ),
           parent_id: link.id,
@@ -432,7 +385,7 @@ import {
 
       for (const [propertyKey, propertyValue] of Object.entries(value)) {
         log({ propertyKey, propertyValue });
-        const [propertyLink] = deep.minilinks.query({
+        const [propertyLink] = deep.select({
           id: {
             _id: [link.id, propertyKey],
           },
@@ -461,33 +414,6 @@ import {
             );
             continue;
           }
-
-          log("TEMPORARY! REMOVE THIS!");
-          log(`minilinks.links`, deep.minilinks.links);
-          log(
-            `package link`,
-            deep.minilinks.query({
-              id: deep.linkId!,
-            }),
-          );
-          log(
-            `contain to string`,
-            deep.minilinks.query({
-              type_id: deep.id("@deep-foundation/core", "Contain"),
-              string: {
-                value: "String",
-              },
-              from_id: deep.linkId!,
-            }),
-          );
-          log(
-            `contain to string`,
-            deep.minilinks.query({
-              id: {
-                _id: [deep.linkId!, "String"],
-              },
-            }),
-          );
 
           const propertyLinkId = this.reservedLinkIds.pop();
           log({ propertyLinkId });
@@ -920,12 +846,6 @@ import {
     return convertResult;
   }
 
-  type ApplyContainTreeLinksDownToParentToMinilinksOptions = Omit<
-    GetContainTreeLinksDownToLinkOptions,
-    "useMinilinks"
-  > & {
-    minilinks: MinilinksResult<Link<number>>;
-  };
 
   interface GetContainTreeLinksDownToLinkOptions {
     linkExp: BoolExpLink;
@@ -945,7 +865,6 @@ import {
     makeUpdateOperationsForStringOrNumberValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForStringValue;
     makeUpdateOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForArrayValue;
     makeUpdateOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForObjectValue;
-    applyContainTreeLinksDownToParentToMinilinks: typeof ObjectToLinksConverter.applyContainTreeLinksDownToParentToMinilinks;
     getContainTreeLinksDownToParent: typeof ObjectToLinksConverter.getContainTreeLinksDownToParent;
     getLinksToReserveCount: typeof ObjectToLinksConverter.getLinksToReserveCount;
     init: typeof ObjectToLinksConverter.init;
