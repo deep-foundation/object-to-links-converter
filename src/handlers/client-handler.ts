@@ -72,7 +72,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
      */
     static async init(
       options: ObjectToLinksConverterInitOptions,
-    ): Promise<ObjectToLinksConverter> {
+    ): ObjectToLinksConverter {
       const log = ObjectToLinksConverter.getLogger(
         ObjectToLinksConverter.init.name,
       );
