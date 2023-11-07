@@ -10,7 +10,7 @@ import {
   MinilinksResult,
 } from "@deep-foundation/deeplinks/imports/minilinks.js";
 
-async (options: {
+(options: {
   deep: DeepClient;
   rootLinkId?: number;
   obj: Obj;
