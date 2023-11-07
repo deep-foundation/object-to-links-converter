@@ -109,14 +109,14 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const log = ObjectToLinksConverter.getLogger("convert");
 
       console.time(
-        `${ObjectToLinksConverter.name} makeUpdateOperationsForObjectValue before`,
+        `${ObjectToLinksConverter.name} updateObjectValue before`,
       );
-      const operations = this.makeUpdateOperationsForObjectValue({
+      const operations = this.updateObjectValue({
         link: this.resultLink,
         value: this.obj,
       });
       console.time(
-        `${ObjectToLinksConverter.name} makeUpdateOperationsForObjectValue before`,
+        `${ObjectToLinksConverter.name} updateObjectValue before`,
       );
       log({ operations });
 
@@ -169,11 +169,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       };
     }
 
-    makeUpdateOperationsForBooleanValue(
-      options: MakeUpdateOperationsForBooleanValueOptions,
+    updateBooleanValue(
+      options: UpdateBooleanValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForBooleanValue.name,
+        this.updateBooleanValue.name,
       );
       log({ options });
       const { link, value } = options;
@@ -197,11 +197,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeUpdateOperationsForStringValue(
-      options: MakeUpdateOperationsForStringValueOptions,
+    updateStringValue(
+      options: UpdateStringValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForStringValue.name,
+        this.updateStringValue.name,
       );
       log({ options });
       const { link, value } = options;
@@ -222,11 +222,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeUpdateOperationsForNumberValue(
-      options: MakeUpdateOperationsForNumberValueOptions,
+    updateNumberValue(
+      options: UpdateNumberValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForNumberValue.name,
+        this.updateNumberValue.name,
       );
       log({ options });
       const { link, value } = options;
@@ -247,11 +247,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeUpdateOperationsForArrayValue<TValue extends AllowedArray>(
-      options: MakeUpdateOperationsForAnyValueOptions<TValue>,
+    updateArrayValue<TValue extends AllowedArray>(
+      options: UpdateAnyValueOptions<TValue>,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForAnyValue.name,
+        this.updateAnyValue.name,
       );
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
@@ -269,7 +269,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
         operations.push(
-          ...(this.makeInsertOperationsForAnyValue({
+          ...(this.insertAnyValue({
             value: element,
             linkId: ,
             name: i.toString(0),
@@ -281,45 +281,45 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeUpdateOperationsForAnyValue<TValue extends AllowedValue>(
-      options: MakeUpdateOperationsForAnyValueOptions<TValue>,
+    updateAnyValue<TValue extends AllowedValue>(
+      options: UpdateAnyValueOptions<TValue>,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForAnyValue.name,
+        this.updateAnyValue.name,
       );
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
       if (typeof value === "boolean") {
         operations.push(
-          ...(this.makeUpdateOperationsForBooleanValue({
+          ...(this.updateBooleanValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "string") {
         operations.push(
-          ...(this.makeUpdateOperationsForStringValue({
+          ...(this.updateStringValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "number") {
         operations.push(
-          ...(this.makeUpdateOperationsForNumberValue({
+          ...(this.updateNumberValue({
             ...options,
             value,
           })),
         );
       } else if (Array.isArray(value)) {
         operations.push(
-          ...(this.makeUpdateOperationsForArrayValue({
+          ...(this.updateArrayValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "object") {
         operations.push(
-          ...(this.makeUpdateOperationsForObjectValue({
+          ...(this.updateObjectValue({
             ...options,
             value,
           })),
@@ -331,11 +331,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeUpdateOperationsForObjectValue(
-      options: MakeUpdateOperationsForObjectValueOptions,
+    updateObjectValue(
+      options: UpdateObjectValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
-        this.makeUpdateOperationsForObjectValue.name,
+        this.updateObjectValue.name,
       );
       const { link, value } = options;
       log({ options });
@@ -351,7 +351,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         log({ propertyLink });
         if (propertyLink) {
           let propertyUpdateOperations: Array<SerialOperation> = [];
-          propertyUpdateOperations = this.makeUpdateOperationsForAnyValue(
+          propertyUpdateOperations = this.updateAnyValue(
             {
               link: propertyLink,
               value: propertyValue,
@@ -374,7 +374,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           }
 
           const propertyInsertOperations =
-            this.makeInsertOperationsForAnyValue({
+            this.insertAnyValue({
               linkId: propertyLinkId,
               parentLinkId: link.id,
               value: propertyValue,
@@ -390,13 +390,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForBooleanValue(
-      options: MakeInsertOperationsForBooleanOptions,
+    insertBooleanValue(
+      options: InsertBooleanOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value, parentLinkId, linkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
-        this.makeInsertOperationsForBooleanValue.name,
+        this.insertBooleanValue.name,
       );
 
       const linkInsertSerialOperation = ({
@@ -435,8 +435,8 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ operations });
       return operations;
     }
-    makeInsertOperationsForStringValue(
-      options: MakeInsertOperationsForStringOptions,
+    insertStringValue(
+      options: InsertStringValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value, parentLinkId, linkId, name } = options;
@@ -488,8 +488,8 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForNumberValue(
-      options: MakeInsertOperationsForNumberOptions,
+    insertNumberValue(
+      options: InsertNumberValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value, parentLinkId, linkId, name } = options;
@@ -541,8 +541,8 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForArrayValue(
-      options: MakeInsertOperationsForArrayValueOptions,
+    insertArrayValue(
+      options: InsertArrayValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value, linkId, name, parentLinkId } = options;
@@ -583,7 +583,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
         operations.push(
-          ...(this.makeInsertOperationsForAnyValue({
+          ...(this.insertAnyValue({
             value: element,
             parentLinkId: linkId,
             linkId: ,
@@ -595,28 +595,28 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForPrimitiveValue(
-      options: MakeInsertOperationsForPrimitiveValueOptions,
+    insertPrimitiveValue(
+      options: InsertPrimitiveValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value } = options;
       if (typeof value === "string") {
         operations.push(
-          ...(this.makeInsertOperationsForStringValue({
+          ...(this.insertStringValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "number") {
         operations.push(
-          ...(this.makeInsertOperationsForNumberValue({
+          ...(this.insertNumberValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "boolean") {
         operations.push(
-          ...(this.makeInsertOperationsForBooleanValue({
+          ...(this.insertBooleanValue({
             ...options,
             value,
           })),
@@ -625,13 +625,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForObjectValue(
-      options: MakeInsertOperationsForObjectValue,
+    insertObjectValue(
+      options: InstakObjectValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value, linkId, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
-        this.makeInsertOperationsForObjectValue.name,
+        this.insertObjectValue.name,
       );
 
       const linkInsertSerialOperation = ({
@@ -678,7 +678,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           continue;
         }
         const propertyInsertOperations =
-          this.makeInsertOperationsForAnyValue({
+          this.insertAnyValue({
             linkId: propertyLinkId,
             parentLinkId: linkId,
             value: propertyValue,
@@ -690,13 +690,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    makeInsertOperationsForAnyValue(
-      options: MakeInsertOperationsForAnyValueOptions,
+    insertAnyValue(
+      options: InsertAnyValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
       const { value } = options;
       const log = ObjectToLinksConverter.getLogger(
-        this.makeInsertOperationsForAnyValue.name,
+        this.insertAnyValue.name,
       );
 
       if (
@@ -705,21 +705,21 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         typeof value === "boolean"
       ) {
         operations.push(
-          ...(this.makeInsertOperationsForPrimitiveValue({
+          ...(this.insertPrimitiveValue({
             ...options,
             value,
           })),
         );
       } else if (Array.isArray(value)) {
         operations.push(
-          ...(this.makeInsertOperationsForArrayValue({
+          ...(this.insertArrayValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "object") {
         operations.push(
-          ...(this.makeInsertOperationsForObjectValue({
+          ...(this.insertObjectValue({
             ...options,
             value,
           })),
@@ -801,18 +801,18 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
   type CustomMethods = {
     convert: typeof ObjectToLinksConverter.prototype.convert;
-    makeInsertOperationsForAnyValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForAnyValue;
-    makeUpdateOperationsForAnyValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForAnyValue;
-    makeInsertOperationsForPrimitiveValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForPrimitiveValue;
-    makeInsertOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForArrayValue;
-    makeInsertOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForObjectValue;
-    makeInsertOperationsForStringValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForStringValue;
-    makeInsertOperationsForNumberValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForNumberValue;
-    makeInsertOperationsForBooleanValue: typeof ObjectToLinksConverter.prototype.makeInsertOperationsForBooleanValue;
-    makeUpdateOperationsForBooleanValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForBooleanValue;
-    makeUpdateOperationsForStringOrNumberValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForStringValue;
-    makeUpdateOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForArrayValue;
-    makeUpdateOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForObjectValue;
+    makeInsertOperationsForAnyValue: typeof ObjectToLinksConverter.prototype.insertAnyValue;
+    updateAnyValue: typeof ObjectToLinksConverter.prototype.updateAnyValue;
+    makeInsertOperationsForPrimitiveValue: typeof ObjectToLinksConverter.prototype.insertPrimitiveValue;
+    makeInsertOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.insertArrayValue;
+    makeInsertOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.insertObjectValue;
+    makeInsertOperationsForStringValue: typeof ObjectToLinksConverter.prototype.insertStringValue;
+    makeInsertOperationsForNumberValue: typeof ObjectToLinksConverter.prototype.insertNumberValue;
+    makeInsertOperationsForBooleanValue: typeof ObjectToLinksConverter.prototype.insertBooleanValue;
+    updateBooleanValue: typeof ObjectToLinksConverter.prototype.updateBooleanValue;
+    updateStringOrNumberValue: typeof ObjectToLinksConverter.prototype.updateStringValue;
+    updateArrayValue: typeof ObjectToLinksConverter.prototype.updateArrayValue;
+    updateObjectValue: typeof ObjectToLinksConverter.prototype.updateObjectValue;
     getContainTreeLinksDownToParent: typeof ObjectToLinksConverter.getContainTreeLinksDownToParent;
     init: typeof ObjectToLinksConverter.init;
   };
@@ -841,58 +841,58 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
   type AllowedValue = AllowedPrimitive | AllowedObject | AllowedArray;
 
-  type MakeInsertOperationsForStringOptions =
-    MakeInsertOperationsForValueOptions<string>;
+  type InsertStringValueOptions =
+    InsertValueOptions<string>;
 
-  type MakeInsertOperationsForNumberOptions =
-    MakeInsertOperationsForValueOptions<number>;
+  type InsertNumberValueOptions =
+    InsertValueOptions<number>;
 
-  type MakeInsertOperationsForBooleanOptions =
-    MakeInsertOperationsForValueOptions<boolean>;
+  type InsertBooleanOptions =
+    InsertValueOptions<boolean>;
 
-  type MakeInsertOperationsForObjectValue =
-    MakeInsertOperationsForValueOptions<AllowedObject>;
+  type InstakObjectValueOptions =
+    InsertValueOptions<AllowedObject>;
 
-  type MakeInsertOperationsForArrayValueOptions =
-    MakeInsertOperationsForValueOptions<AllowedArray>;
+  type InsertArrayValueOptions =
+    InsertValueOptions<AllowedArray>;
 
-  type MakeInsertOperationsForPrimitiveValueOptions =
-    MakeInsertOperationsForValueOptions<AllowedPrimitive>;
+  type InsertPrimitiveValueOptions =
+    InsertValueOptions<AllowedPrimitive>;
 
-  type MakeInsertOperationsForAnyValueOptions = Omit<
-    MakeInsertOperationsForValueOptions<AllowedValue>,
+  type InsertAnyValueOptions = Omit<
+    InsertValueOptions<AllowedValue>,
     "typeLinkId"
   >;
 
-  type MakeInsertOperationsForValueOptions<TValue extends AllowedValue> = {
+  type InsertValueOptions<TValue extends AllowedValue> = {
     parentLinkId: number;
     linkId: number;
     value: TValue;
     name: string;
   };
 
-  interface MakeUpdateOperationsForValueOptions<TValue extends AllowedValue> {
+  interface UpdateValueOptions<TValue extends AllowedValue> {
     link: Link<number>;
     value: TValue;
   }
 
-  type MakeUpdateOperationsForAnyValueOptions<TValue extends AllowedValue> =
-    MakeUpdateOperationsForValueOptions<TValue>;
+  type UpdateAnyValueOptions<TValue extends AllowedValue> =
+    UpdateValueOptions<TValue>;
 
-  type MakeUpdateOperationsForObjectValueOptions =
-    MakeUpdateOperationsForValueOptions<AllowedObject>;
+  type UpdateObjectValueOptions =
+    UpdateValueOptions<AllowedObject>;
 
-  type MakeUpdateOperationsForStringValueOptions =
-    MakeUpdateOperationsForValueOptions<string>;
+  type UpdateStringValueOptions =
+    UpdateValueOptions<string>;
 
-  type MakeUpdateOperationsForArrayValueOptions =
-    MakeUpdateOperationsForValueOptions<AllowedArray>;
+  type UpdateArrayValueOptions =
+    UpdateValueOptions<AllowedArray>;
 
-  type MakeUpdateOperationsForBooleanValueOptions =
-    MakeUpdateOperationsForValueOptions<boolean>;
+  type UpdateBooleanValueOptions =
+    UpdateValueOptions<boolean>;
 
-  type MakeUpdateOperationsForNumberValueOptions =
-    MakeUpdateOperationsForValueOptions<number>;
+  type UpdateNumberValueOptions =
+    UpdateValueOptions<number>;
 };
 
 interface Obj {
