@@ -397,21 +397,16 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         this.insertBooleanValue.name,
       );
 
-      const linkInsertSerialOperation = ({
-        type: "insert",
-        table: "links",
-        objects: {
-          id: linkId,
-          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
-          from_id: parentLinkId,
-          to_id: deep.id(
-            ObjectToLinksConverter.requiredPackageNames.boolean,
-            value.toString(),
-          ),
-        },
-      });
-      log({ linkInsertSerialOperation });
-      operations.push(linkInsertSerialOperation);
+      const {data: [{id: linkId}]} = deep.insert({
+        type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
+        from_id: parentLinkId,
+        to_id: deep.id(
+          ObjectToLinksConverter.requiredPackageNames.boolean,
+          value.toString(),
+        ),
+      })
+      
+      log({ linkId });
 
       const containInsertSerialOperation = ({
         type: "insert",
