@@ -794,6 +794,16 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     return convertResult;
   }
 
+  function toPascalCase(input: string): string {
+    const words = input.split(/[^a-zA-Z0-9]+/);
+  
+    const pascalCased = words
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join('');
+  
+    return pascalCased;
+  }
+
 
   interface GetContainTreeLinksDownToLinkOptions {
     linkExp: BoolExpLink;
