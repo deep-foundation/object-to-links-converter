@@ -444,7 +444,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       })
       log({ linkId });
 
-      const {data: [{id: linkId}]} = deep.insert({
+      const {data: [{id: containLinkId}]} = deep.insert({
         type_id: deep.id("@deep-foundation/core", "Contain"),
         from_id: parentLinkId,
         to_id: linkId,
@@ -454,7 +454,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           },
         },
       })
-      log({ linkId });
+      log({ containLinkId });
 
       log({ operations });
       return operations;
