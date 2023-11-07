@@ -87,8 +87,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
               },
             ).data[0] as Link<number>
       log({ rootLink });
-      const linkIdsToReserveCount = this.getLinksToReserveCount({ value: obj });
-      log({ linkIdsToReserveCount });
       const resultLink = options.resultLinkId
         ? deep
             .select(options.resultLinkId).data[0] as Link<number>
@@ -169,42 +167,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         rootLinkId: this.rootLink.id,
         resultLinkId: this.resultLink.id,
       };
-    }
-
-    static getLinksToReserveCount(options: {
-      value: string | number | boolean | object;
-    }): number {
-      const { value } = options;
-      const log = ObjectToLinksConverter.getLogger(
-        ObjectToLinksConverter.getLinksToReserveCount.name,
-      );
-      let count = 0;
-      const typeOfValue = typeof value;
-      log({ typeOfValue });
-      const reservedLinksCountForOneLink =
-        1 + // Type
-        1; // Contain for type
-      if (typeOfValue === "string") {
-        count = reservedLinksCountForOneLink;
-      } else if (typeOfValue === "number") {
-        count = reservedLinksCountForOneLink;
-      } else if (typeOfValue === "boolean") {
-        count = reservedLinksCountForOneLink;
-      } else if (Array.isArray(value)) {
-        const array = value as Array<any>;
-        for (const arrayValue of array) {
-          if (!arrayValue) return count;
-          count += this.getLinksToReserveCount({ value: arrayValue });
-        }
-      } else if (typeOfValue === "object") {
-        count += reservedLinksCountForOneLink;
-        for (const [propertyKey, propertyValue] of Object.entries(value)) {
-          if (!value) return count;
-          count += this.getLinksToReserveCount({ value: propertyValue });
-        }
-      }
-      log({ count });
-      return count;
     }
 
     makeUpdateOperationsForBooleanValue(
@@ -411,9 +373,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
             continue;
           }
 
-          if (!propertyLinkId) {
-            throw new Error(`Not enough reserved link ids`);
-          }
           const propertyInsertOperations =
             this.makeInsertOperationsForAnyValue({
               linkId: propertyLinkId,
@@ -718,9 +677,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           );
           continue;
         }
-        if (!propertyLinkId) {
-          throw new Error(`Not enough reserved link ids`);
-        }
         const propertyInsertOperations =
           this.makeInsertOperationsForAnyValue({
             linkId: propertyLinkId,
@@ -858,7 +814,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     makeUpdateOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForArrayValue;
     makeUpdateOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.makeUpdateOperationsForObjectValue;
     getContainTreeLinksDownToParent: typeof ObjectToLinksConverter.getContainTreeLinksDownToParent;
-    getLinksToReserveCount: typeof ObjectToLinksConverter.getLinksToReserveCount;
     init: typeof ObjectToLinksConverter.init;
   };
 
