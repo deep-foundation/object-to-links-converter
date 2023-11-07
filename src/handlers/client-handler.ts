@@ -46,7 +46,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         return logger
     }
 
-    static async getContainTreeLinksDownToParent(
+    static getContainTreeLinksDownToParent(
       options: GetContainTreeLinksDownToLinkOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -68,7 +68,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     /**
      * Undefined is returned of root object is empty
      */
-    static async init(
+    static init(
       options: ObjectToLinksConverterInitOptions,
     ): ObjectToLinksConverter {
       const log = ObjectToLinksConverter.getLogger(
@@ -107,7 +107,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return converter;
     }
 
-    async convert() {
+    convert() {
       const log = ObjectToLinksConverter.getLogger("convert");
 
       console.time(
@@ -207,7 +207,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return count;
     }
 
-    async makeUpdateOperationsForBooleanValue(
+    makeUpdateOperationsForBooleanValue(
       options: MakeUpdateOperationsForBooleanValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -235,7 +235,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeUpdateOperationsForStringValue(
+    makeUpdateOperationsForStringValue(
       options: MakeUpdateOperationsForStringValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -260,7 +260,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeUpdateOperationsForNumberValue(
+    makeUpdateOperationsForNumberValue(
       options: MakeUpdateOperationsForNumberValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -285,7 +285,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeUpdateOperationsForArrayValue<TValue extends AllowedArray>(
+    makeUpdateOperationsForArrayValue<TValue extends AllowedArray>(
       options: MakeUpdateOperationsForAnyValueOptions<TValue>,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -319,7 +319,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeUpdateOperationsForAnyValue<TValue extends AllowedValue>(
+    makeUpdateOperationsForAnyValue<TValue extends AllowedValue>(
       options: MakeUpdateOperationsForAnyValueOptions<TValue>,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -369,7 +369,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeUpdateOperationsForObjectValue(
+    makeUpdateOperationsForObjectValue(
       options: MakeUpdateOperationsForObjectValueOptions,
     ) {
       const log = ObjectToLinksConverter.getLogger(
@@ -431,7 +431,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForBooleanValue(
+    makeInsertOperationsForBooleanValue(
       options: MakeInsertOperationsForBooleanOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -476,7 +476,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ operations });
       return operations;
     }
-    async makeInsertOperationsForStringValue(
+    makeInsertOperationsForStringValue(
       options: MakeInsertOperationsForStringOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -529,7 +529,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForNumberValue(
+    makeInsertOperationsForNumberValue(
       options: MakeInsertOperationsForNumberOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -582,7 +582,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForArrayValue(
+    makeInsertOperationsForArrayValue(
       options: MakeInsertOperationsForArrayValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -636,7 +636,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForPrimitiveValue(
+    makeInsertOperationsForPrimitiveValue(
       options: MakeInsertOperationsForPrimitiveValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -666,7 +666,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForObjectValue(
+    makeInsertOperationsForObjectValue(
       options: MakeInsertOperationsForObjectValue,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -734,7 +734,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       return operations;
     }
 
-    async makeInsertOperationsForAnyValue(
+    makeInsertOperationsForAnyValue(
       options: MakeInsertOperationsForAnyValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
@@ -777,7 +777,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     }
   }
 
-  const packageLog = ObjectToLinksConverter.getLogger("@deep-foundation/object-to-links-async-converter");
+  const packageLog = ObjectToLinksConverter.getLogger("@deep-foundation/object-to-links-converter");
   packageLog({ options });
 
   function getObjectToLinksConverterProxy(options: {
@@ -812,7 +812,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     });
   }
 
-  async function main() {
+  function main() {
     const log = ObjectToLinksConverter.getLogger(main.name);
 
     if (Object.keys(obj).length === 0) {
