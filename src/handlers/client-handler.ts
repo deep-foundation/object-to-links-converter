@@ -392,7 +392,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       options: InsertBooleanOptions,
     ) {
       const operations: Array<SerialOperation> = [];
-      const { value, parentLinkId, linkId, name } = options;
+      const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertBooleanValue.name,
       );
@@ -437,7 +437,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       options: InsertStringValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
-      const { value, parentLinkId, linkId, name } = options;
+      const { value, parentLinkId,  name } = options;
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
@@ -490,7 +490,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       options: InsertNumberValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
-      const { value, parentLinkId, linkId, name } = options;
+      const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
@@ -543,7 +543,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       options: InsertArrayValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
-      const { value, linkId, name, parentLinkId } = options;
+      const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
@@ -626,7 +626,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       options: InstakObjectValueOptions,
     ) {
       const operations: Array<SerialOperation> = [];
-      const { value, linkId, name, parentLinkId } = options;
+      const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertObjectValue.name,
       );
