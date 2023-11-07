@@ -1,0 +1,80 @@
+{
+  "name": "@deep-foundation/object-to-links-async-converter",
+  "version": "0.0.1-dev.3",
+  "keywords": [
+    "deep-package"
+  ],
+  "type": "module",
+  "description": "A deep package for converting object to links",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/deep-foundation/object-to-links-async-converter"
+  },
+  "scripts": {
+    "test": "jest",
+    "library:build:clean": "fse remove dist && npm run library:build:dirty",
+    "library:build:dirty": "npx ts-node --esm ./automation/library/build.ts",
+    "npm-pull": "npm-pull",
+    "npm-release": "npm-release",
+    "library:build:generate-package-class": "generate-package-class",
+    "documentation:generate": "npx ts-node --esm ./automation/documentation/generate.ts",
+    "library:documentation:generate": "typedoc ./src/main.ts",
+    "prettier:check": "prettier . --check --ignore-unknown",
+    "prettier:write": "prettier . --write --ignore-unknown",
+    "prepare": "husky install",
+    "lint:fix": "eslint . --fix",
+    "commit": "cz"
+  },
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "files": [
+    "/dist",
+    "./deep.json"
+  ],
+  "dependencies": {
+    "@deep-foundation/boolean": "~1.0.0",
+    "@deep-foundation/core": "^0.0.2",
+    "@deep-foundation/tsx": "^0.0.5",
+    "debug": "^4.3.4",
+    "source-map": "^0.7.4"
+  },
+  "devDependencies": {
+    "@atao60/fse-cli": "^0.1.7",
+    "@deep-foundation/npm-automation": "^18.1.11",
+    "@freephoenix888/recursive-object-map": "^1.0.0",
+    "@types/debug": "^4.1.8",
+    "@types/fs-extra": "^11.0.1",
+    "@types/jest": "^29.5.4",
+    "@types/json-stringify-safe": "^5.0.0",
+    "@types/node": "^20.2.4",
+    "@typescript-eslint/eslint-plugin": "^6.5.0",
+    "@typescript-eslint/parser": "^6.5.0",
+    "bun-types": "^1.0.1",
+    "case-anything": "^2.1.13",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.48.0",
+    "eslint-config-prettier": "^9.0.0",
+    "fs-extra": "^11.1.1",
+    "get-value": "^3.0.1",
+    "husky": "^8.0.3",
+    "jest": "^29.6.4",
+    "json-stringify-safe": "^5.0.1",
+    "lint-staged": "^14.0.1",
+    "object-hash": "^3.0.0",
+    "prettier": "3.0.3",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@deep-foundation/deeplinks": "~0.0.300"
+  },
+  "lint-staged": {
+    "**/*": "npm run prettier:write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
