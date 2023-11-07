@@ -78,7 +78,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       );
       const { obj } = options;
       const rootLink: Link<number> = options.rootLinkId
-        ? deep.select(options.rootLinkId).then((result) => result.data[0])
+        ? deep.select(options.rootLinkId).data[0] as Link<number>
         : deep
             .insert(
               {
@@ -87,8 +87,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
               {
                 returning: deep.linksSelectReturning,
               },
-            )
-            .then((result) => result.data[0] as Link<number>);
+            ).data[0] as Link<number>
       log({ rootLink });
       const linkIdsToReserveCount = this.getLinksToReserveCount({ value: obj });
       log({ linkIdsToReserveCount });
@@ -96,8 +95,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ reservedLinkIds });
       const resultLink = options.resultLinkId
         ? deep
-            .select(options.resultLinkId)
-            .then((result) => result.data[0])
+            .select(options.resultLinkId).data[0] as Link<number>
         : rootLink;
       if (options.resultLinkId && !resultLink) {
         throw new Error(
