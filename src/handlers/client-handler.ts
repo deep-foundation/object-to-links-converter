@@ -7,8 +7,10 @@ import {
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
+
+
 (options: {
-  deep: DeepClient;
+  deep: SyncDeepClient;
   rootLinkId?: number;
   obj: Obj;
   customMethods?: Record<string, Function>;
@@ -953,3 +955,9 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 interface Obj {
   [key: string]: string | number | Obj | boolean;
 }
+
+type RemovePromiseFromMethodsReturnType<T> = {
+  [K in keyof T]: T[K] extends (...args: any[]) => Promise<infer U> ? (...args: any[]) => U : T[K];
+};
+
+type SyncDeepClient = RemovePromiseFromMethodsReturnType<DeepClient>
