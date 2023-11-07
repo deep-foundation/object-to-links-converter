@@ -20,7 +20,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
   const logs: Array<any> = [];
 
   class ObjectToLinksConverter {
-    reservedLinkIds: Array<number>;
     rootLink: Link<number>;
     obj: Obj;
     resultLink: Link<number>;
@@ -32,7 +31,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
     constructor(options: ObjectToLinksConverterOptions) {
       this.rootLink = options.rootLink;
-      this.reservedLinkIds = options.reservedLinkIds;
       this.obj = options.obj;
       this.resultLink = options.resultLink;
     }
@@ -91,8 +89,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ rootLink });
       const linkIdsToReserveCount = this.getLinksToReserveCount({ value: obj });
       log({ linkIdsToReserveCount });
-      const reservedLinkIds = deep.reserve(linkIdsToReserveCount);
-      log({ reservedLinkIds });
       const resultLink = options.resultLinkId
         ? deep
             .select(options.resultLinkId).data[0] as Link<number>
@@ -103,7 +99,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         );
       }
       const converter = new this({
-        reservedLinkIds,
         rootLink,
         obj,
         resultLink,
@@ -314,7 +309,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         operations.push(
           ...(this.makeInsertOperationsForAnyValue({
             value: element,
-            linkId: this.reservedLinkIds.pop()!,
+            linkId: ,
             name: i.toString(0),
             parentLinkId: link.id,
           })),
@@ -416,8 +411,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
             continue;
           }
 
-          const propertyLinkId = this.reservedLinkIds.pop();
-          log({ propertyLinkId });
           if (!propertyLinkId) {
             throw new Error(`Not enough reserved link ids`);
           }
@@ -634,7 +627,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           ...(this.makeInsertOperationsForAnyValue({
             value: element,
             parentLinkId: linkId,
-            linkId: this.reservedLinkIds.pop()!,
+            linkId: ,
             name: i.toString(),
           })),
         );
@@ -725,8 +718,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           );
           continue;
         }
-        const propertyLinkId = this.reservedLinkIds.pop();
-        log({ propertyLinkId });
         if (!propertyLinkId) {
           throw new Error(`Not enough reserved link ids`);
         }
@@ -873,7 +864,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
   interface ObjectToLinksConverterOptions {
     rootLink: Link<number>;
-    reservedLinkIds: Array<number>;
     obj: Obj;
     customMethods?: CustomMethods;
     resultLink: Link<number>;
