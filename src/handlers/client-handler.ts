@@ -454,22 +454,17 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       })
       log({ linkId });
 
-      const containInsertSerialOperation = ({
-        type: "insert",
-        table: "links",
-        objects: {
-          type_id: deep.id("@deep-foundation/core", "Contain"),
-          from_id: parentLinkId,
-          to_id: linkId,
-          string: {
-            data: {
-              value: name,
-            },
+      const {data: [{id: linkId}]} = deep.insert({
+        type_id: deep.id("@deep-foundation/core", "Contain"),
+        from_id: parentLinkId,
+        to_id: linkId,
+        string: {
+          data: {
+            value: name,
           },
         },
-      });
-      log({ containInsertSerialOperation });
-      operations.push(containInsertSerialOperation);
+      })
+      log({ linkId });
 
       log({ operations });
       return operations;
@@ -483,18 +478,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
-      const linkInsertSerialOperation = ({
-        type: "insert",
-        table: "links",
-        objects: {
-          id: linkId,
-          from_id: parentLinkId,
-          to_id: parentLinkId,
-          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
-        },
-      });
-      log({ linkInsertSerialOperation });
-      operations.push(linkInsertSerialOperation);
+
+      const {data: [{id: linkId}]} = deep.insert({
+        from_id: parentLinkId,
+        to_id: parentLinkId,
+        type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
+      })
+      log({ linkId });
 
       const stringValueInsertSerialOperation = ({
         type: "insert",
