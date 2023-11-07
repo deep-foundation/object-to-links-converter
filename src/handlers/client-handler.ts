@@ -136,7 +136,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       });
       if (hasResultLink) {
         operations.push(
-          createSerialOperation({
+          ({
             type: "update",
             table: "links",
             exp: {
@@ -150,7 +150,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         );
       } else {
         operations.push(
-          createSerialOperation({
+          ({
             type: "insert",
             table: "links",
             objects: {
@@ -222,7 +222,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
       operations.push(
-        createSerialOperation({
+        ({
           type: "update",
           table: "links",
           exp: {
@@ -250,7 +250,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
       operations.push(
-        createSerialOperation({
+        ({
           type: "update",
           table: `strings` as Table<"update">,
           exp: {
@@ -275,7 +275,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
       operations.push(
-        createSerialOperation({
+        ({
           type: "update",
           table: `numbers` as Table<"update">,
           exp: {
@@ -447,7 +447,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         this.makeInsertOperationsForBooleanValue.name,
       );
 
-      const linkInsertSerialOperation = createSerialOperation({
+      const linkInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -463,7 +463,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ linkInsertSerialOperation });
       operations.push(linkInsertSerialOperation);
 
-      const containInsertSerialOperation = createSerialOperation({
+      const containInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -491,7 +491,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
-      const linkInsertSerialOperation = createSerialOperation({
+      const linkInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -504,7 +504,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ linkInsertSerialOperation });
       operations.push(linkInsertSerialOperation);
 
-      const stringValueInsertSerialOperation = createSerialOperation({
+      const stringValueInsertSerialOperation = ({
         type: "insert",
         table: `${typeof value}s` as Table<"insert">,
         objects: {
@@ -515,7 +515,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ stringValueInsertSerialOperation });
       operations.push(stringValueInsertSerialOperation);
 
-      const containInsertSerialOperation = createSerialOperation({
+      const containInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -544,7 +544,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
-      const linkInsertSerialOperation = createSerialOperation({
+      const linkInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -557,7 +557,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ linkInsertSerialOperation });
       operations.push(linkInsertSerialOperation);
 
-      const stringValueInsertSerialOperation = createSerialOperation({
+      const stringValueInsertSerialOperation = ({
         type: "insert",
         table: `${typeof value}s` as Table<"insert">,
         objects: {
@@ -568,7 +568,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ stringValueInsertSerialOperation });
       operations.push(stringValueInsertSerialOperation);
 
-      const containInsertSerialOperation = createSerialOperation({
+      const containInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -598,7 +598,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         "makeInsertOperationsForStringValue",
       );
 
-      const linkInsertSerialOperation = createSerialOperation({
+      const linkInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -611,7 +611,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ linkInsertSerialOperation });
       operations.push(linkInsertSerialOperation);
 
-      const containInsertSerialOperation = createSerialOperation({
+      const containInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -682,7 +682,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         this.makeInsertOperationsForObjectValue.name,
       );
 
-      const linkInsertSerialOperation = createSerialOperation({
+      const linkInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
@@ -695,7 +695,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       log({ linkInsertSerialOperation });
       operations.push(linkInsertSerialOperation);
 
-      const containInsertSerialOperation = createSerialOperation({
+      const containInsertSerialOperation = ({
         type: "insert",
         table: "links",
         objects: {
