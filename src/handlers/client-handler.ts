@@ -381,7 +381,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
       for (const [propertyKey, propertyValue] of Object.entries(value)) {
         log({ propertyKey, propertyValue });
-        const [propertyLink] = deep.select({
+        const {data: [propertyLink]} = deep.select({
           id: {
             _id: [link.id, propertyKey],
           },
