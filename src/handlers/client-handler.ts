@@ -554,24 +554,19 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         to_id: parentLinkId,
       },
     )
+    log({linkId})
 
-
-      const containInsertSerialOperation = ({
-        type: "insert",
-        table: "links",
-        objects: {
-          type_id: deep.id("@deep-foundation/core", "Contain"),
-          from_id: parentLinkId,
-          to_id: linkId,
-          string: {
-            data: {
-              value: name,
-            },
-          },
+    const {data: [{id: contaiLinkId}]} = deep.insert({
+      type_id: deep.id("@deep-foundation/core", "Contain"),
+      from_id: parentLinkId,
+      to_id: linkId,
+      string: {
+        data: {
+          value: name,
         },
-      });
-      log({ containInsertSerialOperation });
-      operations.push(containInsertSerialOperation);
+      },
+    })
+      log({ contaiLinkId });
 
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
