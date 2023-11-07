@@ -18,12 +18,12 @@ import {
   resultLinkId?: number;
 }) => {
   const { deep, rootLinkId, obj, customMethods, resultLinkId } = options;
-  const { createSerialOperation } = await import(
+  const { createSerialOperation } = import(
     "@deep-foundation/deeplinks/imports/gql/index.js"
   );
-  const { pascalCase } = await import("case-anything");
-  const { default: debug } = await import("debug");
-  const { default: util } = await import("util");
+  const { pascalCase } = import("case-anything");
+  const { default: debug } = import("debug");
+  const { default: util } = import("util");
   const logs: Array<any> = [];
   const packageLog = debug("@deep-foundation/object-to-links-async-converter");
   packageLog({ options });
@@ -71,7 +71,7 @@ import {
         ObjectToLinksConverter.applyContainTreeLinksDownToParentToMinilinks
           .name,
       );
-      const links = (await this.getContainTreeLinksDownToParent({
+      const links = (this.getContainTreeLinksDownToParent({
         linkExp: options.linkExp,
       })) as DeepClientResult<Link<number>[]>;
       log({ links });
@@ -89,12 +89,12 @@ import {
       const { linkExp } = options;
       const query: BoolExpLink = {
         up: {
-          tree_id: await deep.id("@deep-foundation/core", "containTree"),
+          tree_id: deep.id("@deep-foundation/core", "containTree"),
           parent: linkExp,
         },
       };
       log({ query });
-      const result = await deep.select(query);
+      const result = deep.select(query);
       log({ result });
       return result;
     }
@@ -110,7 +110,7 @@ import {
       );
       const { obj } = options;
       const containTreeLinksDownToCoreAndThisPackageLinkApplyMinilinksResult =
-        await this.applyContainTreeLinksDownToParentToMinilinks({
+        this.applyContainTreeLinksDownToParentToMinilinks({
           linkExp: {
             _or: Object.values(
               ObjectToLinksConverter.requiredPackagesInMinilinks,
@@ -124,11 +124,11 @@ import {
         });
       log({ containTreeLinksDownToCoreAndThisPackageLinkApplyMinilinksResult });
       const rootLink: Link<number> = options.rootLinkId
-        ? await deep.select(options.rootLinkId).then((result) => result.data[0])
-        : await deep
+        ? deep.select(options.rootLinkId).then((result) => result.data[0])
+        : deep
             .insert(
               {
-                  type_id: await deep.id(deep.linkId!, "Root"),
+                  type_id: deep.id(deep.linkId!, "Root"),
               },
               {
                 returning: deep.linksSelectReturning,
@@ -137,7 +137,7 @@ import {
             .then((result) => result.data[0] as Link<number>);
       log({ rootLink });
       const containTreeLinksDownToRootLinkApplyMinilinksResult =
-        await this.applyContainTreeLinksDownToParentToMinilinks({
+        this.applyContainTreeLinksDownToParentToMinilinks({
           linkExp: {
             id: rootLink.id,
           },
@@ -146,10 +146,10 @@ import {
       log({ containTreeLinksDownToRootLinkApplyMinilinksResult });
       const linkIdsToReserveCount = this.getLinksToReserveCount({ value: obj });
       log({ linkIdsToReserveCount });
-      const reservedLinkIds = await deep.reserve(linkIdsToReserveCount);
+      const reservedLinkIds = deep.reserve(linkIdsToReserveCount);
       log({ reservedLinkIds });
       const resultLink = options.resultLinkId
-        ? await deep
+        ? deep
             .select(options.resultLinkId)
             .then((result) => result.data[0])
         : rootLink;
@@ -174,7 +174,7 @@ import {
       console.time(
         `${ObjectToLinksConverter.name} makeUpdateOperationsForObjectValue before`,
       );
-      const operations = await this.makeUpdateOperationsForObjectValue({
+      const operations = this.makeUpdateOperationsForObjectValue({
         link: this.resultLink,
         value: this.obj,
       });
@@ -183,10 +183,10 @@ import {
       );
       log({ operations });
 
-      const hasResultTypeLinkId = await deep.id(deep.linkId!, "HasResult");
+      const hasResultTypeLinkId = deep.id(deep.linkId!, "HasResult");
       const {
         data: [hasResultLink],
-      } = await deep.select({
+      } = deep.select({
         type_id: hasResultTypeLinkId,
         from_id: this.rootLink.id,
       });
@@ -219,7 +219,7 @@ import {
       }
 
       console.time(`${ObjectToLinksConverter.name} serial before`);
-      const serialResult = await deep.serial({
+      const serialResult = deep.serial({
         operations,
       });
       console.time(`${ObjectToLinksConverter.name} serial after`);
@@ -285,7 +285,7 @@ import {
             id: link.id,
           },
           value: {
-            to_id: await deep.id(
+            to_id: deep.id(
               ObjectToLinksConverter.requiredPackageNames.boolean,
               value.toString(),
             ),
@@ -355,9 +355,9 @@ import {
       const { link, value } = options;
       const operations: Array<SerialOperation> = [];
 
-      await deep.delete({
+      deep.delete({
         up: {
-          tree_id: await deep.id(
+          tree_id: deep.id(
             ObjectToLinksConverter.requiredPackagesInMinilinks.core,
             "ContainTree",
           ),
@@ -368,7 +368,7 @@ import {
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
         operations.push(
-          ...(await this.makeInsertOperationsForAnyValue({
+          ...(this.makeInsertOperationsForAnyValue({
             value: element,
             linkId: this.reservedLinkIds.pop()!,
             name: i.toString(0),
@@ -390,35 +390,35 @@ import {
       const operations: Array<SerialOperation> = [];
       if (typeof value === "boolean") {
         operations.push(
-          ...(await this.makeUpdateOperationsForBooleanValue({
+          ...(this.makeUpdateOperationsForBooleanValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "string") {
         operations.push(
-          ...(await this.makeUpdateOperationsForStringValue({
+          ...(this.makeUpdateOperationsForStringValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "number") {
         operations.push(
-          ...(await this.makeUpdateOperationsForNumberValue({
+          ...(this.makeUpdateOperationsForNumberValue({
             ...options,
             value,
           })),
         );
       } else if (Array.isArray(value)) {
         operations.push(
-          ...(await this.makeUpdateOperationsForArrayValue({
+          ...(this.makeUpdateOperationsForArrayValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "object") {
         operations.push(
-          ...(await this.makeUpdateOperationsForObjectValue({
+          ...(this.makeUpdateOperationsForObjectValue({
             ...options,
             value,
           })),
@@ -450,7 +450,7 @@ import {
         log({ propertyLink });
         if (propertyLink) {
           let propertyUpdateOperations: Array<SerialOperation> = [];
-          propertyUpdateOperations = await this.makeUpdateOperationsForAnyValue(
+          propertyUpdateOperations = this.makeUpdateOperationsForAnyValue(
             {
               link: propertyLink,
               value: propertyValue,
@@ -483,7 +483,7 @@ import {
           log(
             `contain to string`,
             deep.minilinks.query({
-              type_id: await deep.id("@deep-foundation/core", "Contain"),
+              type_id: deep.id("@deep-foundation/core", "Contain"),
               string: {
                 value: "String",
               },
@@ -505,7 +505,7 @@ import {
             throw new Error(`Not enough reserved link ids`);
           }
           const propertyInsertOperations =
-            await this.makeInsertOperationsForAnyValue({
+            this.makeInsertOperationsForAnyValue({
               linkId: propertyLinkId,
               parentLinkId: link.id,
               value: propertyValue,
@@ -535,9 +535,9 @@ import {
         table: "links",
         objects: {
           id: linkId,
-          type_id: await deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
           from_id: parentLinkId,
-          to_id: await deep.id(
+          to_id: deep.id(
             ObjectToLinksConverter.requiredPackageNames.boolean,
             value.toString(),
           ),
@@ -550,7 +550,7 @@ import {
         type: "insert",
         table: "links",
         objects: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: parentLinkId,
           to_id: linkId,
           string: {
@@ -581,7 +581,7 @@ import {
           id: linkId,
           from_id: parentLinkId,
           to_id: parentLinkId,
-          type_id: await deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
         },
       });
       log({ linkInsertSerialOperation });
@@ -602,7 +602,7 @@ import {
         type: "insert",
         table: "links",
         objects: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: parentLinkId,
           to_id: linkId,
           string: {
@@ -634,7 +634,7 @@ import {
           id: linkId,
           from_id: parentLinkId,
           to_id: parentLinkId,
-          type_id: await deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
         },
       });
       log({ linkInsertSerialOperation });
@@ -655,7 +655,7 @@ import {
         type: "insert",
         table: "links",
         objects: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: parentLinkId,
           to_id: linkId,
           string: {
@@ -686,7 +686,7 @@ import {
         table: "links",
         objects: {
           id: linkId,
-          type_id: await deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
           from_id: parentLinkId,
           to_id: parentLinkId,
         },
@@ -698,7 +698,7 @@ import {
         type: "insert",
         table: "links",
         objects: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: parentLinkId,
           to_id: linkId,
           string: {
@@ -714,7 +714,7 @@ import {
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
         operations.push(
-          ...(await this.makeInsertOperationsForAnyValue({
+          ...(this.makeInsertOperationsForAnyValue({
             value: element,
             parentLinkId: linkId,
             linkId: this.reservedLinkIds.pop()!,
@@ -733,21 +733,21 @@ import {
       const { value } = options;
       if (typeof value === "string") {
         operations.push(
-          ...(await this.makeInsertOperationsForStringValue({
+          ...(this.makeInsertOperationsForStringValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "number") {
         operations.push(
-          ...(await this.makeInsertOperationsForNumberValue({
+          ...(this.makeInsertOperationsForNumberValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "boolean") {
         operations.push(
-          ...(await this.makeInsertOperationsForBooleanValue({
+          ...(this.makeInsertOperationsForBooleanValue({
             ...options,
             value,
           })),
@@ -770,7 +770,7 @@ import {
         table: "links",
         objects: {
           id: linkId,
-          type_id: await deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
           from_id: parentLinkId,
           to_id: parentLinkId,
         },
@@ -782,7 +782,7 @@ import {
         type: "insert",
         table: "links",
         objects: {
-          type_id: await deep.id("@deep-foundation/core", "Contain"),
+          type_id: deep.id("@deep-foundation/core", "Contain"),
           from_id: parentLinkId,
           to_id: linkId,
           string: {
@@ -814,7 +814,7 @@ import {
           throw new Error(`Not enough reserved link ids`);
         }
         const propertyInsertOperations =
-          await this.makeInsertOperationsForAnyValue({
+          this.makeInsertOperationsForAnyValue({
             linkId: propertyLinkId,
             parentLinkId: linkId,
             value: propertyValue,
@@ -841,21 +841,21 @@ import {
         typeof value === "boolean"
       ) {
         operations.push(
-          ...(await this.makeInsertOperationsForPrimitiveValue({
+          ...(this.makeInsertOperationsForPrimitiveValue({
             ...options,
             value,
           })),
         );
       } else if (Array.isArray(value)) {
         operations.push(
-          ...(await this.makeInsertOperationsForArrayValue({
+          ...(this.makeInsertOperationsForArrayValue({
             ...options,
             value,
           })),
         );
       } else if (typeof value === "object") {
         operations.push(
-          ...(await this.makeInsertOperationsForObjectValue({
+          ...(this.makeInsertOperationsForObjectValue({
             ...options,
             value,
           })),
@@ -889,7 +889,7 @@ import {
   }
 
   try {
-    const result = await main();
+    const result = main();
     return {
       result,
       logs: util.inspect(logs, {
@@ -917,7 +917,7 @@ import {
       return;
     }
 
-    const objectToLinksConverter = await ObjectToLinksConverter.init({
+    const objectToLinksConverter = ObjectToLinksConverter.init({
       obj,
       rootLinkId,
       resultLinkId,
@@ -930,7 +930,7 @@ import {
     });
     log({ proxiedObjectToLinksConverter });
 
-    const convertResult = await proxiedObjectToLinksConverter.convert();
+    const convertResult = proxiedObjectToLinksConverter.convert();
     log({ convertResult });
 
     return convertResult;
