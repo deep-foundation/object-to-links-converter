@@ -271,7 +271,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         operations.push(
           ...(this.insertAnyValue({
             value: element,
-            linkId: ,
             name: i.toString(0),
             parentLinkId: link.id,
           })),
@@ -375,7 +374,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
           const propertyInsertOperations =
             this.insertAnyValue({
-              linkId: propertyLinkId,
               parentLinkId: link.id,
               value: propertyValue,
               name: propertyKey,
@@ -586,7 +584,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           ...(this.insertAnyValue({
             value: element,
             parentLinkId: linkId,
-            linkId: ,
             name: i.toString(),
           })),
         );
@@ -679,7 +676,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         }
         const propertyInsertOperations =
           this.insertAnyValue({
-            linkId: propertyLinkId,
             parentLinkId: linkId,
             value: propertyValue,
             name: propertyKey,
