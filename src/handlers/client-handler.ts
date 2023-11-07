@@ -404,7 +404,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         table: "links",
         objects: {
           id: linkId,
-          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
           from_id: parentLinkId,
           to_id: deep.id(
             ObjectToLinksConverter.requiredPackageNames.boolean,
@@ -450,7 +450,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           id: linkId,
           from_id: parentLinkId,
           to_id: parentLinkId,
-          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
         },
       });
       log({ linkInsertSerialOperation });
@@ -503,7 +503,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           id: linkId,
           from_id: parentLinkId,
           to_id: parentLinkId,
-          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
         },
       });
       log({ linkInsertSerialOperation });
@@ -555,7 +555,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         table: "links",
         objects: {
           id: linkId,
-          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
           from_id: parentLinkId,
           to_id: parentLinkId,
         },
@@ -639,7 +639,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         table: "links",
         objects: {
           id: linkId,
-          type_id: deep.id(deep.linkId!, pascalCase(typeof value)),
+          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
           from_id: parentLinkId,
           to_id: parentLinkId,
         },
