@@ -441,18 +441,14 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
       );
-      const linkInsertSerialOperation = ({
-        type: "insert",
-        table: "links",
-        objects: {
-          id: linkId,
-          from_id: parentLinkId,
-          to_id: parentLinkId,
-          type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
-        },
-      });
-      log({ linkInsertSerialOperation });
-      operations.push(linkInsertSerialOperation);
+
+      const {data: [{id: linkId}]} = deep.insert({
+        from_id: parentLinkId,
+        to_id: parentLinkId,
+        type_id: deep.id(deep.linkId!, toPascalCase(typeof value)),
+      })
+
+      log({ linkId });
 
       const stringValueInsertSerialOperation = ({
         type: "insert",
