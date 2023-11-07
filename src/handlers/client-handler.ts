@@ -876,7 +876,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
   type InsertValueOptions<TValue extends AllowedValue> = {
     parentLinkId: number;
-    linkId: number;
     value: TValue;
     name: string;
   };
