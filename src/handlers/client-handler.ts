@@ -470,7 +470,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertArrayValue(
       options: InsertArrayValueOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
@@ -506,8 +505,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           })),
         );
       }
-
-      return operations;
     }
 
     insertPrimitiveValue(
