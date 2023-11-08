@@ -176,24 +176,16 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       );
       log({ options });
       const { link, value } = options;
-      const operations: Array<SerialOperation> = [];
-      operations.push(
-        ({
-          type: "update",
-          table: "links",
-          exp: {
-            id: link.id,
-          },
-          value: {
-            to_id: deep.id(
-              ObjectToLinksConverter.requiredPackageNames.boolean,
-              value.toString(),
-            ),
-          },
-        }),
-      );
-      log({ operations });
-      return operations;
+      deep.update({
+        id: link.id,
+      }, {
+        to_id: deep.id(
+          ObjectToLinksConverter.requiredPackageNames.boolean,
+          value.toString(),
+        ),
+      }, {
+        table: "links"
+      })
     }
 
     updateStringValue(
