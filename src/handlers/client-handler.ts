@@ -497,13 +497,11 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
-        operations.push(
-          ...(this.insertAnyValue({
-            value: element,
-            parentLinkId: linkId,
-            name: i.toString(),
-          })),
-        );
+        this.insertAnyValue({
+          value: element,
+          parentLinkId: linkId,
+          name: i.toString(),
+        })
       }
     }
 
@@ -532,7 +530,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertObjectValue(
       options: InstakObjectValueOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertObjectValue.name,
@@ -571,16 +568,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           );
           continue;
         }
-        const propertyInsertOperations =
           this.insertAnyValue({
             parentLinkId: linkId,
             value: propertyValue,
             name: propertyKey,
           });
-        operations.push(...propertyInsertOperations);
       }
 
-      return operations;
     }
 
     insertAnyValue(
