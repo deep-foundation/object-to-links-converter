@@ -368,7 +368,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertBooleanValue(
       options: InsertBooleanOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertBooleanValue.name,
@@ -396,9 +395,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         },
       })
       log({ containLinkId });
-
-      log({ operations });
-      return operations;
     }
     insertStringValue(
       options: InsertStringValueOptions,
