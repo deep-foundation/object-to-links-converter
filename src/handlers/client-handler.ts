@@ -580,7 +580,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertAnyValue(
       options: InsertAnyValueOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertAnyValue.name,
@@ -591,32 +590,23 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         typeof value === "number" ||
         typeof value === "boolean"
       ) {
-        operations.push(
-          ...(this.insertPrimitiveValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertPrimitiveValue({
+          ...options,
+          value,
+        })
       } else if (Array.isArray(value)) {
-        operations.push(
-          ...(this.insertArrayValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertArrayValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "object") {
-        operations.push(
-          ...(this.insertObjectValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertObjectValue({
+          ...options,
+          value,
+        })
       } else {
         throw new Error(`Type of value ${typeof value} is not supported`);
       }
-
-      log({ operations });
-      return operations;
     }
   }
 
