@@ -231,7 +231,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         this.updateAnyValue.name,
       );
       const { link, value } = options;
-      const operations: Array<SerialOperation> = [];
 
       deep.delete({
         up: {
@@ -245,16 +244,12 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
       for (let i = 0; i < value.length; i++) {
         const element = value[i];
-        operations.push(
-          ...(this.insertAnyValue({
-            value: element,
-            name: i.toString(0),
-            parentLinkId: link.id,
-          })),
-        );
+        this.insertAnyValue({
+          value: element,
+          name: i.toString(0),
+          parentLinkId: link.id,
+        })
       }
-
-      return operations;
     }
 
     updateAnyValue<TValue extends AllowedValue>(
