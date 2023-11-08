@@ -403,7 +403,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertStringValue(
       options: InsertStringValueOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value, parentLinkId,  name } = options;
       const log = ObjectToLinksConverter.getLogger(
         "makeInsertOperationsForStringValue",
@@ -432,9 +431,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         },
       })
       log({ containLinkId });
-
-      log({ operations });
-      return operations;
     }
 
     insertNumberValue(
