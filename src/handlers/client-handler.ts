@@ -315,7 +315,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
       );
       const { link, value } = options;
       log({ options });
-      const operations: Array<SerialOperation> = [];
 
       for (const [propertyKey, propertyValue] of Object.entries(value)) {
         log({ propertyKey, propertyValue });
@@ -326,15 +325,12 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         });
         log({ propertyLink });
         if (propertyLink) {
-          let propertyUpdateOperations: Array<SerialOperation> = [];
-          propertyUpdateOperations = this.updateAnyValue(
+          this.updateAnyValue(
             {
               link: propertyLink,
               value: propertyValue,
             },
           );
-          log({ propertyUpdateOperations });
-          operations.push(...propertyUpdateOperations);
         } else {
           if (
             typeof propertyValue !== "string" &&
@@ -349,20 +345,13 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
             continue;
           }
 
-          const propertyInsertOperations =
             this.insertAnyValue({
               parentLinkId: link.id,
               value: propertyValue,
               name: propertyKey,
             });
-          log({ propertyInsertOperations });
-          operations.push(...propertyInsertOperations);
         }
-
-        log({ operations });
       }
-
-      return operations;
     }
 
     insertBooleanValue(
