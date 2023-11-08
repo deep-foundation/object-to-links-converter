@@ -510,7 +510,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     insertPrimitiveValue(
       options: InsertPrimitiveValueOptions,
     ) {
-      const operations: Array<SerialOperation> = [];
       const { value } = options;
       if (typeof value === "string") {
         operations.push(
@@ -534,7 +533,6 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
           })),
         );
       }
-      return operations;
     }
 
     insertObjectValue(
