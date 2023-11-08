@@ -1,7 +1,6 @@
 import {
   DeepClient,
   DeepClientResult,
-  SerialOperation,
   Table,
 } from "@deep-foundation/deeplinks/imports/client.js";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
