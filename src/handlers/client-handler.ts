@@ -512,26 +512,20 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     ) {
       const { value } = options;
       if (typeof value === "string") {
-        operations.push(
-          ...(this.insertStringValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertStringValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "number") {
-        operations.push(
-          ...(this.insertNumberValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertNumberValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "boolean") {
-        operations.push(
-          ...(this.insertBooleanValue({
-            ...options,
-            value,
-          })),
-        );
+        this.insertBooleanValue({
+          ...options,
+          value,
+        })
       }
     }
 
