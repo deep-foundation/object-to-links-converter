@@ -264,47 +264,34 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         this.updateAnyValue.name,
       );
       const { link, value } = options;
-      const operations: Array<SerialOperation> = [];
       if (typeof value === "boolean") {
-        operations.push(
-          ...(this.updateBooleanValue({
-            ...options,
-            value,
-          })),
-        );
+        this.updateBooleanValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "string") {
-        operations.push(
-          ...(this.updateStringValue({
-            ...options,
-            value,
-          })),
-        );
+        this.updateStringValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "number") {
-        operations.push(
-          ...(this.updateNumberValue({
-            ...options,
-            value,
-          })),
-        );
+        this.updateNumberValue({
+          ...options,
+          value,
+        })
       } else if (Array.isArray(value)) {
-        operations.push(
-          ...(this.updateArrayValue({
-            ...options,
-            value,
-          })),
-        );
+        this.updateArrayValue({
+          ...options,
+          value,
+        })
       } else if (typeof value === "object") {
-        operations.push(
-          ...(this.updateObjectValue({
-            ...options,
-            value,
-          })),
-        );
+        this.updateObjectValue({
+          ...options,
+          value,
+        })
       } else {
         throw new Error(`Type of value ${typeof value} is not supported`);
       }
-
-      return operations;
     }
 
     updateObjectValue(
