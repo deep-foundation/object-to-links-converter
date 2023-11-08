@@ -127,31 +127,23 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         from_id: this.rootLink.id,
       });
       if (hasResultLink) {
-        operations.push(
-          ({
-            type: "update",
-            table: "links",
-            exp: {
-              type_id: hasResultTypeLinkId,
-              from_id: this.rootLink.id,
-            },
-            value: {
-              to_id: this.resultLink.id,
-            },
-          }),
-        );
+        deep.update({
+          type_id: hasResultTypeLinkId,
+          from_id: this.rootLink.id,
+        }, {
+          to_id: this.resultLink.id,
+        }, {
+          table: "links"
+        })
       } else {
-        operations.push(
-          ({
-            type: "insert",
-            table: "links",
-            objects: {
-              type_id: hasResultTypeLinkId,
-              from_id: this.rootLink.id,
-              to_id: this.resultLink.id,
-            },
-          }),
-        );
+        deep.insert({
+          type_id: hasResultTypeLinkId,
+          from_id: this.rootLink.id,
+          to_id: this.resultLink.id,
+        
+        }, {
+          table: "links"
+        })
       }
 
       console.time(`${ObjectToLinksConverter.name} serial before`);
