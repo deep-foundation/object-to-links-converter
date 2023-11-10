@@ -301,7 +301,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
         if (propertyLink) {
           this.updateAnyValue(
             {
-              link: propertyLink,
+              link: propertyLink as Link<number>,
               value: propertyValue,
             },
           );
