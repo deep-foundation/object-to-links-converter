@@ -3,7 +3,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
 
 async (options: {
-  deep: DeepClient;
+  deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
   data: {
     newLink: Link<number>;
   };
@@ -12,38 +12,28 @@ async (options: {
     deep,
     data: { newLink: parseItLink },
   } = options;
-  const { default: ts } = await import("typescript");
-  const { default: util } = await import("util");
   try {
     const result = await main();
     return {
-      result: util.inspect(result, {
-        maxArrayLength: null,
-        depth: null,
-      }),
+      result: JSON.stringify(result),
     };
   } catch (error) {
     console.log("FreePhoenix error");
     console.dir({
-      error: util.inspect(error, {
-        maxArrayLength: null,
-        depth: null,
-      }),
+      error: JSON.stringify(error),
     });
     throw {
-      error: util.inspect(error, {
-        maxArrayLength: null,
-        depth: null,
-      }),
+      error: JSON.stringify(error),
     };
   }
 
   async function main() {
     const {
-      data: [rootLink],
+      data: rootLinkSelectData,
     } = await deep.select({
       id: parseItLink.from_id,
     });
+    const rootLink = rootLinkSelectData[0] as Link<number>;
     if (!rootLink) {
       throw new Error(`parseIt.to does not exist: ##${parseItLink.from_id}`);
     }
@@ -66,7 +56,7 @@ async (options: {
       throw new Error(`##${rootLink.id} must have value`);
     }
 
-    const clientHandlerResult = await callClientHandler({
+    const clientHandlerResult = callClientHandler({
       deep,
       linkId: await deep.id(deep.linkId!, "clientHandler"),
       args: [
@@ -84,42 +74,30 @@ async (options: {
     return clientHandlerResult;
   }
 
-  async function callClientHandler(
+  function callClientHandler(
     options: CallClientHandlerOptions,
-  ): Promise<any> {
+  ): any {
     const { linkId, deep, args } = options;
-    const code = await deep
-      .select({
-        in: {
-          id: linkId,
-        },
-      })
-      .then((result) => {
-        const link = result.data[0];
-        if (!link)
-          throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
-        const code = link.value?.value;
-        if (!code) throw new Error(`##${link.id} must have value`);
-        return code;
-      });
-
-    const functionExpressionString = ts
-      .transpileModule(code, {
-        compilerOptions: {
-          module: ts.ModuleKind.ESNext,
-          sourceMap: true,
-          target: ts.ScriptTarget.ESNext,
-        },
-      })
-      .outputText.replace("export {}", "");
+    const { data: selectData } = deep.select({
+      in: {
+        id: linkId,
+      },
+    });
+  
+    const link = selectData[0] as Link<number>;
+    if (!link) throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
+  
+    const functionExpressionString = link.value?.value;
+    if (!functionExpressionString) throw new Error(`##${link.id} must have value`);
+  
     const fn: Function = eval(functionExpressionString);
-
-    const result = await fn(...args);
+  
+    const result = fn(...args);
     return result;
   }
 
   interface CallClientHandlerOptions {
-    deep: DeepClientInstance;
+    deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
     linkId: number;
     args: Array<any>;
   }
