@@ -42,7 +42,7 @@ const ssl = process.env[REQUIRED_PROCESS_ENVS.ssl]! === "true";
 const token = process.env[REQUIRED_PROCESS_ENVS.token]!;
 
 let apolloClient: ApolloClient<InMemoryCache>;
-let decoratedDeep: ObjectToLinksConverterDecorator<DeepClient>;
+let decoratedDeep: RemovePromiseFromMethodsReturnType<ObjectToLinksConverterDecorator<DeepClient>>;
 
 const REQUIRED_PACKAGES_IN_MINILINKS = ["@deep-foundation/core", PACKAGE_NAME];
 
@@ -563,7 +563,7 @@ async function clientHandlerTests(options: {
     [propertyKey]: propertyValue,
   };
 
-  const clientHandlerResult = await callClientHandler({
+  const clientHandlerResult = callClientHandler({
     deep: decoratedDeep,
     linkId: decoratedDeep.objectToLinksConverterPackage.clientHandler.idLocal(),
     args: [
@@ -592,8 +592,9 @@ async function clientHandlerTests(options: {
   assert.notStrictEqual(rootLinkFromSelect, undefined);
 
   const {
-    data: [resultLinkFromSelect],
+    data: selectData,
   } = await decoratedDeep.select(resultLinkId);
+  const resultLinkFromSelect = selectData[0] as Link<number>;
   assert.notStrictEqual(resultLinkFromSelect, undefined);
 
   const hasResultSelectData: BoolExpLink = {

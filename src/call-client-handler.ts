@@ -1,41 +1,31 @@
 import ts from "typescript";
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
+import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
-export async function callClientHandler(
+export function callClientHandler(
   options: CallClientHandlerOptions,
-): Promise<any> {
+): any {
   const { linkId, deep, args } = options;
-  const code = await deep
-    .select({
-      in: {
-        id: linkId,
-      },
-    })
-    .then((result) => {
-      const link = result.data[0];
-      if (!link) throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
-      const code = link.value?.value;
-      if (!code) throw new Error(`##${link.id} must have value`);
-      return code;
-    });
+  const { data: selectData } = deep.select({
+    in: {
+      id: linkId,
+    },
+  });
 
-  const functionExpressionString = ts
-    .transpileModule(code, {
-      compilerOptions: {
-        module: ts.ModuleKind.ESNext,
-        sourceMap: true,
-        target: ts.ScriptTarget.ESNext,
-      },
-    })
-    .outputText.replace("export {}", "");
+  const link = selectData[0] as Link<number>;
+  if (!link) throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
+
+  const functionExpressionString = link.value?.value;
+  if (!functionExpressionString) throw new Error(`##${link.id} must have value`);
+
   const fn: Function = eval(functionExpressionString);
 
-  const result = await fn(...args);
+  const result = fn(...args);
   return result;
 }
 
 export interface CallClientHandlerOptions {
-  deep: DeepClientInstance;
+  deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
   linkId: number;
   args: Array<any>;
 }
