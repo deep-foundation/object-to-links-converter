@@ -2,7 +2,7 @@ import { DeepClient } from "@deep-foundation/deeplinks/imports/client.js";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
 
-async (options: {
+(options: {
   deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
   data: {
     newLink: Link<number>;
@@ -13,7 +13,7 @@ async (options: {
     data: { newLink: parseItLink },
   } = options;
   try {
-    const result = await main();
+    const result = main();
     return {
       result: JSON.stringify(result),
     };
@@ -27,10 +27,10 @@ async (options: {
     };
   }
 
-  async function main() {
+  function main() {
     const {
       data: rootLinkSelectData,
-    } = await deep.select({
+    } = deep.select({
       id: parseItLink.from_id,
     });
     const rootLink = rootLinkSelectData[0] as Link<number>;
@@ -58,7 +58,7 @@ async (options: {
 
     const clientHandlerResult = callClientHandler({
       deep,
-      linkId: await deep.id(deep.linkId!, "clientHandler"),
+      linkId: deep.id(deep.linkId!, "clientHandler"),
       args: [
         {
           deep: deep,
