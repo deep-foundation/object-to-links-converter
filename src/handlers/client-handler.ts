@@ -364,7 +364,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     ) {
       const { value, parentLinkId,  name } = options;
       const log = ObjectToLinksConverter.getLogger(
-        "makeInsertOperationsForStringValue",
+        this.insertStringValue.name,
       );
 
       const {data: [{id: linkId}]} = deep.insert({
@@ -397,7 +397,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     ) {
       const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
-        "makeInsertOperationsForStringValue",
+        this.insertNumberValue.name,
       );
 
       const {data: [{id: linkId}]} = deep.insert({
@@ -431,7 +431,7 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     ) {
       const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(
-        "makeInsertOperationsForStringValue",
+        this.insertArrayValue.name,
       );
 
       const {data: [{id: linkId}]} = deep.insert({
@@ -647,16 +647,16 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
   type CustomMethods = {
     convert: typeof ObjectToLinksConverter.prototype.convert;
-    makeInsertOperationsForAnyValue: typeof ObjectToLinksConverter.prototype.insertAnyValue;
+    insertAnyValue: typeof ObjectToLinksConverter.prototype.insertAnyValue;
     updateAnyValue: typeof ObjectToLinksConverter.prototype.updateAnyValue;
-    makeInsertOperationsForPrimitiveValue: typeof ObjectToLinksConverter.prototype.insertPrimitiveValue;
-    makeInsertOperationsForArrayValue: typeof ObjectToLinksConverter.prototype.insertArrayValue;
-    makeInsertOperationsForObjectValue: typeof ObjectToLinksConverter.prototype.insertObjectValue;
-    makeInsertOperationsForStringValue: typeof ObjectToLinksConverter.prototype.insertStringValue;
-    makeInsertOperationsForNumberValue: typeof ObjectToLinksConverter.prototype.insertNumberValue;
-    makeInsertOperationsForBooleanValue: typeof ObjectToLinksConverter.prototype.insertBooleanValue;
+    insertPrimitiveValue: typeof ObjectToLinksConverter.prototype.insertPrimitiveValue;
+    insertArrayValue: typeof ObjectToLinksConverter.prototype.insertArrayValue;
+    insertObjectValue: typeof ObjectToLinksConverter.prototype.insertObjectValue;
+    insertStringValue: typeof ObjectToLinksConverter.prototype.insertStringValue;
+    insertNumberValue: typeof ObjectToLinksConverter.prototype.insertNumberValue;
+    insertBooleanValue: typeof ObjectToLinksConverter.prototype.insertBooleanValue;
     updateBooleanValue: typeof ObjectToLinksConverter.prototype.updateBooleanValue;
-    updateStringOrNumberValue: typeof ObjectToLinksConverter.prototype.updateStringValue;
+    updateStringValue: typeof ObjectToLinksConverter.prototype.updateStringValue;
     updateArrayValue: typeof ObjectToLinksConverter.prototype.updateArrayValue;
     updateObjectValue: typeof ObjectToLinksConverter.prototype.updateObjectValue;
     getContainTreeLinksDownToParent: typeof ObjectToLinksConverter.getContainTreeLinksDownToParent;
