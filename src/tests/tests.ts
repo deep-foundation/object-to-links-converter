@@ -23,6 +23,7 @@ import { pascalCase } from "case-anything";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
 import { createSerialOperation } from "@deep-foundation/deeplinks/imports/gql/serial.js";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
+import {RemovePromiseFromMethodsReturnType} from '../RemovePromiseFromMethodsReturnType.js'
 dotenv.config({
   path: "./.env.test.local",
 });
