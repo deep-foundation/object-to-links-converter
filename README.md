@@ -1,5 +1,5 @@
-[![npm](https://img.shields.io/npm/v/@deep-foundation/object-to-links-async-converter.svg)](https://www.npmjs.com/package/@deep-foundation/object-to-links-async-converter)
-[![Gitpod](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/deep-foundation/object-to-links-async-converter)
+[![npm](https://img.shields.io/npm/v/@deep-foundation/object-to-links-converter.svg)](https://www.npmjs.com/package/@deep-foundation/object-to-links-converter)
+[![Gitpod](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/deep-foundation/object-to-links-converter)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 
 A deep package for converting object to links
@@ -64,7 +64,7 @@ Object:
 ```
 
 Result:
-![image](https://github.com/deep-foundation/object-to-links-async-converter/assets/66206278/c749287f-7171-4d79-9518-0ff5c61c88f1)
+![image](https://github.com/deep-foundation/object-to-links-converter/assets/66206278/c749287f-7171-4d79-9518-0ff5c61c88f1)
 
 ## How to programmatically wait until converting is done?
 

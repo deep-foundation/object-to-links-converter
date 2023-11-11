@@ -100,7 +100,7 @@ export class Package extends BasePackage {
   constructor(param: PackageOptions) {
     super({
       ...param,
-      name: "@deep-foundation/object-to-links-async-converter",
+      name: "@deep-foundation/object-to-links-converter",
     });
   }
 
