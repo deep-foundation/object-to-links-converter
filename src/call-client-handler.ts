@@ -1,4 +1,3 @@
-import ts from "typescript";
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { RemovePromiseFromMethodsReturnType } from "./RemovePromiseFromMethodsReturnType";
