@@ -19,10 +19,6 @@ import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsR
       result: JSON.stringify(result, jsonStringifyCircularReplacer),
     };
   } catch (error) {
-    console.log("FreePhoenix error");
-    console.dir({
-      error: JSON.stringify(error),
-    });
     throw {
       error: JSON.stringify(error, jsonStringifyCircularReplacer),
     };
