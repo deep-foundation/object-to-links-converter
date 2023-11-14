@@ -12,7 +12,7 @@ export function callClientHandler(
     },
   });
 
-  const link = selectData[0] as Link<number>;
+  const link = selectData?.[0] as Link<number>;
   if (!link) throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
 
   const functionExpressionString = link.value?.value;
