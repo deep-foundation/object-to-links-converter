@@ -1,6 +1,6 @@
-import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
-import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
-import { RemovePromiseFromMethodsReturnType } from "./RemovePromiseFromMethodsReturnType";
+import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client.js";
+import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
+import { RemovePromiseFromMethodsReturnType } from "./RemovePromiseFromMethodsReturnType.js";
 import { packageLog } from "./packageLog.js";
 
 export async function callClientHandler(
