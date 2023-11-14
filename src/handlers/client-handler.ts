@@ -594,12 +594,12 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
     return JSON.stringify({
       result,
       logs: logs,
-    });
+    }, jsonStringifyCircularReplacer);
   } catch (error) {
     throw JSON.stringify({
       error: error,
       logs: logs,
-    });
+    }, jsonStringifyCircularReplacer);
   }
 
   function main() {
@@ -627,6 +627,20 @@ import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
     return convertResult;
   }
+
+  function jsonStringifyCircularReplacer () {
+    let seen = new WeakSet();
+    let placeholder = {};
+    return (key: any, value:any) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return placeholder;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
 
   function toPascalCase(input: string): string {
     const words = input.split(/[^a-zA-Z0-9]+/);
