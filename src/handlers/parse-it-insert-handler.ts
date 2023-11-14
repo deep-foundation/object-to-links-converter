@@ -1,7 +1,7 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client.js";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
-import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
-import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsReturnType";
+import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client.js";
+import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsReturnType.js";
 
 (options: {
   deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
