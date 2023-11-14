@@ -1,7 +1,6 @@
 import { DeepClient } from "@deep-foundation/deeplinks/imports/client.js";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client.js";
-import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsReturnType.js";
 
 (options: {
   deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
@@ -112,4 +111,8 @@ import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsR
     linkId: number;
     args: Array<any>;
   }
+};
+
+export type RemovePromiseFromMethodsReturnType<T> = {
+  [K in keyof T]: T[K] extends (...args: any[]) => Promise<infer U> ? (...args: any[]) => U : T[K];
 };
