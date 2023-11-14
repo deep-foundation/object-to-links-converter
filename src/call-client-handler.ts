@@ -2,17 +2,17 @@ import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { RemovePromiseFromMethodsReturnType } from "./RemovePromiseFromMethodsReturnType";
 
-export function callClientHandler(
+export async function callClientHandler(
   options: CallClientHandlerOptions,
-): any {
+): Promise<any> {
   const { linkId, deep, args } = options;
-  const { data: selectData } = deep.select({
+  const { data: selectData } = await deep.select({
     in: {
       id: linkId,
     },
   });
 
-  const link = selectData?.[0] as Link<number>;
+  const link = selectData[0];
   if (!link) throw new Error(`Unable to find SyncTextFile for ##${linkId}`);
 
   const functionExpressionString = link.value?.value;
@@ -25,7 +25,7 @@ export function callClientHandler(
 }
 
 export interface CallClientHandlerOptions {
-  deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
+  deep: DeepClientInstance;
   linkId: number;
   args: Array<any>;
 }

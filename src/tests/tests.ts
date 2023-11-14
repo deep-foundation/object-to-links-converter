@@ -43,7 +43,7 @@ const ssl = process.env[REQUIRED_PROCESS_ENVS.ssl]! === "true";
 const token = process.env[REQUIRED_PROCESS_ENVS.token]!;
 
 let apolloClient: ApolloClient<InMemoryCache>;
-let decoratedDeep: RemovePromiseFromMethodsReturnType<ObjectToLinksConverterDecorator<DeepClient>>;
+let decoratedDeep: ObjectToLinksConverterDecorator<DeepClient>;
 
 const REQUIRED_PACKAGES_IN_MINILINKS = ["@deep-foundation/core", PACKAGE_NAME];
 
@@ -564,7 +564,7 @@ async function clientHandlerTests(options: {
     [propertyKey]: propertyValue,
   };
 
-  const clientHandlerResult = callClientHandler({
+  const clientHandlerResult = await callClientHandler({
     deep: decoratedDeep,
     linkId: decoratedDeep.objectToLinksConverterPackage.clientHandler.idLocal(),
     args: [
