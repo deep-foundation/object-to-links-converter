@@ -16,7 +16,7 @@ import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsR
   try {
     const result = main();
     return {
-      result: JSON.stringify(result),
+      result: JSON.stringify(result, jsonStringifyCircularReplacer),
     };
   } catch (error) {
     console.log("FreePhoenix error");
@@ -24,7 +24,7 @@ import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsR
       error: JSON.stringify(error),
     });
     throw {
-      error: JSON.stringify(error),
+      error: JSON.stringify(error, jsonStringifyCircularReplacer),
     };
   }
 
@@ -96,6 +96,20 @@ import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsR
     const result = fn(...args);
     return result;
   }
+
+  function jsonStringifyCircularReplacer () {
+    let seen = new WeakSet();
+    let placeholder = {};
+    return (key: any, value:any) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return placeholder;
+        }
+        seen.add(value);
+      }
+      return value;
+    };
+  };
 
   interface CallClientHandlerOptions {
     deep: RemovePromiseFromMethodsReturnType<DeepClientInstance>;
