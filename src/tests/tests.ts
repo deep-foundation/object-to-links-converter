@@ -11,7 +11,7 @@ import {
   createObjectToLinksConverterDecorator,
   ObjectToLinksConverterDecorator,
 } from "../create-object-to-links-converter-decorator.js";
-import { debug } from "../debug.js";
+import { packageLog } from "../packageLog.js";
 import { PACKAGE_NAME } from "../package-name.js";
 import dotenv from "dotenv";
 import {
@@ -28,7 +28,7 @@ dotenv.config({
   path: "./.env.test.local",
 });
 
-const molduleLog = debug("test");
+const molduleLog = packageLog.extend("test");
 
 export const REQUIRED_PROCESS_ENVS = {
   graphqlPath: "GRAPHQL_PATH",

@@ -1,10 +1,12 @@
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 import { RemovePromiseFromMethodsReturnType } from "./RemovePromiseFromMethodsReturnType";
+import { packageLog } from "./packageLog";
 
 export async function callClientHandler(
   options: CallClientHandlerOptions,
 ): Promise<any> {
+  const log = packageLog.extend(callClientHandler.name)
   const { linkId, deep, args } = options;
   const { data: selectData } = await deep.select({
     in: {
@@ -17,6 +19,7 @@ export async function callClientHandler(
 
   const functionExpressionString = link.value?.value;
   if (!functionExpressionString) throw new Error(`##${link.id} must have value`);
+  log({ functionExpressionString })
 
   const fn: Function = eval(functionExpressionString);
 

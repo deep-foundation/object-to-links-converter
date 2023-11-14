@@ -1,6 +1,6 @@
 import { DeepClientInstance } from "@deep-foundation/deeplinks/imports/client.js";
 import { Package } from "./package.js";
-import { debug } from "./debug.js";
+import { packageLog } from "./packageLog.js";
 import { REQUIRED_PACKAGES_IN_MINILINKS } from "./required-packages-in-minilinks.js";
 import { applyRequiredPackagesInMinilinks } from "./apply-required-packages-in-minilinks.js";
 import { convert } from "./convert.js";
@@ -20,7 +20,7 @@ await objectToLinksConverterDeepDecorator.applyRequiredPackagesInMinilinks();
 export function createObjectToLinksConverterDecorator<
   TDeepClient extends DeepClientInstance,
 >(deep: TDeepClient) {
-  const log = debug(createObjectToLinksConverterDecorator.name);
+  const log = packageLog(createObjectToLinksConverterDecorator.name);
   const _package = new Package({ deep });
   const result = Object.assign(Object.create(deep), {
     [PACKAGE_NAME]: _package,
