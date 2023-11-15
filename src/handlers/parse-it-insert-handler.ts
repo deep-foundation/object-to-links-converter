@@ -183,38 +183,38 @@ function processObject(options: {
       console.time(`${ObjectToLinksConverter.name} updateObjectValue before`);
       log({ operations });
 
-      const hasResultTypeLinkId = deep.id(deep.linkId!, "HasResult");
-      const {
-        data: [hasResultLink],
-      } = deep.select({
-        type_id: hasResultTypeLinkId,
-        from_id: this.rootLink.id,
-      });
-      if (hasResultLink) {
-        deep.update(
-          {
-            type_id: hasResultTypeLinkId,
-            from_id: this.rootLink.id,
-          },
-          {
-            to_id: this.resultLink.id,
-          },
-          {
-            table: "links",
-          },
-        );
-      } else {
-        deep.insert(
-          {
-            type_id: hasResultTypeLinkId,
-            from_id: this.rootLink.id,
-            to_id: this.resultLink.id,
-          },
-          {
-            table: "links",
-          },
-        );
-      }
+      // const hasResultTypeLinkId = deep.id(deep.linkId!, "HasResult");
+      // const {
+      //   data: [hasResultLink],
+      // } = deep.select({
+      //   type_id: hasResultTypeLinkId,
+      //   from_id: this.rootLink.id,
+      // });
+      // if (hasResultLink) {
+      //   deep.update(
+      //     {
+      //       type_id: hasResultTypeLinkId,
+      //       from_id: this.rootLink.id,
+      //     },
+      //     {
+      //       to_id: this.resultLink.id,
+      //     },
+      //     {
+      //       table: "links",
+      //     },
+      //   );
+      // } else {
+      //   deep.insert(
+      //     {
+      //       type_id: hasResultTypeLinkId,
+      //       from_id: this.rootLink.id,
+      //       to_id: this.resultLink.id,
+      //     },
+      //     {
+      //       table: "links",
+      //     },
+      //   );
+      // }
 
       console.time(`${ObjectToLinksConverter.name} serial before`);
       const serialResult = deep.serial({
