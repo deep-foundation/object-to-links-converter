@@ -368,7 +368,7 @@ async function checkStringOrNumberProperty(
     },
   });
   if (!link) {
-    throw new Error(`Failed to find property`);
+    throw new Error(`Failed to find property ${name} in ${parentLink.id}`);
   }
   assert.equal(link.from_id, parentLink.id);
   assert.equal(link.to_id, parentLink.id);
