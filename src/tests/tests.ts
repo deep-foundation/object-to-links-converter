@@ -6,7 +6,6 @@ import {
   DeepClientOptions,
   SerialOperation,
 } from "@deep-foundation/deeplinks/imports/client.js";
-import { callClientHandler } from "../call-client-handler.js";
 import {
   createObjectToLinksConverterDecorator,
   ObjectToLinksConverterDecorator,
