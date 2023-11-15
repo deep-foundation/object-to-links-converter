@@ -22,7 +22,7 @@ import { pascalCase } from "case-anything";
 import { Link } from "@deep-foundation/deeplinks/imports/minilinks.js";
 import { createSerialOperation } from "@deep-foundation/deeplinks/imports/gql/serial.js";
 import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js";
-import {RemovePromiseFromMethodsReturnType} from '../RemovePromiseFromMethodsReturnType.js'
+import { RemovePromiseFromMethodsReturnType } from "../RemovePromiseFromMethodsReturnType.js";
 dotenv.config({
   path: "./.env.test.local",
 });
@@ -85,31 +85,33 @@ async function test() {
   await objectPropertyWithArrayOfObjectsPropertyTest();
   await objectPropertyWithObjectPropertyTest();
   await objectPropertyWithObjectPropertyWithArrayPropertyTest();
-  await customRootLinkTest();
-  await customMethodMakeInsertoperationsForBooleanValue();
   await treeTest();
-  await updateObjectPropertyWithObjectPropertyTest();
-  await customResultLinkTest();
-  await parseItTest();
-  await parseItWithDifferentResultLinkResultTest();
+  await objectPropertyTest();
+  await differentResultLinkResultTest();
 }
 
-async function parseItTest() {
-  const propertyKey = "myStringKey";
-  const propertyValue = "myStringValue";
+async function genericTest(options: {
+  /**
+   * Object value to test
+   */
+  obj: AllowedObject;
+  /**
+   * Custom result link id. If not provided, root link will be used as result link
+   */
+  resultLinkId?: number;
+}) {
+  const { obj, resultLinkId } = options;
   const {
     data: [rootLink],
   } = await deep.insert(
     {
-      type_id: await deep.id(
+      type_id: deep.idLocal(
         "@deep-foundation/object-to-links-converter",
         "Root",
       ),
       object: {
         data: {
-          value: {
-            [propertyKey]: propertyValue,
-          },
+          value: obj,
         },
       },
     },
@@ -117,82 +119,14 @@ async function parseItTest() {
       returning: deep.linksSelectReturning,
     },
   );
+  const resultLink = resultLinkId
+    ? await deep.select(resultLinkId).then((result) => result.data[0])
+    : rootLink;
   const {
     data: [parseItLink],
   } = await deep.insert(
     {
-      type_id: await deep.id(
-        "@deep-foundation/object-to-links-converter",
-        "ParseIt",
-      ),
-      from_id: rootLink.id,
-      to_id: rootLink.id,
-    },
-    {
-      returning: deep.linksSelectReturning,
-    },
-  );
-
-  await deep.await(parseItLink.id);
-
-  await checkProperty({
-    parentLink: rootLink as Link<number>,
-    name: propertyKey,
-    value: propertyValue,
-  });
-
-  const {
-    data: [hasResultLink],
-  } = await deep.select({
-    type_id: {
-      _id: ["@deep-foundation/object-to-links-converter", "HasResult"],
-    },
-    from_id: rootLink.id,
-    to_id: rootLink.id,
-  });
-  assert.notEqual(hasResultLink, undefined);
-}
-
-async function parseItWithDifferentResultLinkResultTest() {
-  const propertyKey = "myStringKey";
-  const propertyValue = "myStringValue";
-  const {
-    data: [rootLink],
-  } = await deep.insert(
-    {
-      type_id: await deep.id(
-        "@deep-foundation/object-to-links-converter",
-        "Root",
-      ),
-      object: {
-        data: {
-          value: {
-            [propertyKey]: propertyValue,
-          },
-        },
-      },
-    },
-    {
-      returning: deep.linksSelectReturning,
-    },
-  );
-
-  const {
-    data: [resultLink],
-  } = await deep.insert(
-    {
-      type_id: await deep.id("@deep-foundation/core", "Type"),
-    },
-    {
-      returning: deep.linksSelectReturning,
-    },
-  );
-
-  const {
-    data: [parseItLink],
-  } = await deep.insert(
-    {
-      type_id: await deep.id(
+      type_id: deep.idLocal(
         "@deep-foundation/object-to-links-converter",
         "ParseIt",
       ),
@@ -206,84 +140,66 @@ async function parseItWithDifferentResultLinkResultTest() {
 
   await deep.await(parseItLink.id);
 
-  await checkProperty({
-    parentLink: resultLink as Link<number>,
-    name: propertyKey,
-    value: propertyValue,
-  });
-
-  const {
-    data: [hasResultLink],
-  } = await deep.select({
-    type_id: {
-      _id: ["@deep-foundation/object-to-links-converter", "HasResult"],
-    },
-    from_id: rootLink.id,
-    to_id: resultLink.id,
-  });
-  assert.notEqual(hasResultLink, undefined);
+  for (const [propertyKey, propertyValue] of Object.entries(obj)) {
+    await checkProperty({
+      parentLink: resultLink as Link<number>,
+      name: propertyKey,
+      value: propertyValue,
+    });
+  }
 }
 
-async function customResultLinkTest() {
+async function simpleGenericTest(option: {
+  /**
+   * Type of property to test
+   */
+  typeOfProperty: "string" | "number" | "boolean" | "object" | "array";
+  /**
+   * Determines whether to use root link as result link or to create a new link
+   */
+  createDifferentResultLinkId?: number;
+}) {
+  const { typeOfProperty } = option;
+  const propertyValue =
+    typeOfProperty === "string"
+      ? "myStringValue"
+      : typeOfProperty === "number"
+      ? 123
+      : typeOfProperty === "boolean"
+      ? true
+      : typeOfProperty === "object"
+      ? { myStringKey: "myStringValue" }
+      : ["myStringValue", "myStringValue"];
+  const obj = {
+    myProperty: propertyValue,
+  };
+  const resultLinkId = option.createDifferentResultLinkId;
+  await genericTest({
+    obj,
+  });
+}
+
+async function stringPropertyTest() {
+  await simpleGenericTest({
+    typeOfProperty: "string",
+  })
+}
+
+async function differentResultLinkResultTest() {
   const propertyKey = "myStringKey";
   const propertyValue = "myStringValue";
-  const {
-    data: [{ id: resultLinkId }],
-  } = await deep.insert({
-    type_id: await deep.id("@deep-foundation/core", "Type"),
-  });
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-    resultLinkId,
+  const obj = {
+    [propertyKey]: propertyValue,
+  };
+  await genericTest({
+    obj,
   });
 }
 
-async function updateObjectPropertyWithObjectPropertyTest() {
-  const {
-    data: [{ id: rootLinkId }],
-  } = await deep.insert({
-    type_id: await deep.id("@deep-foundation/core", "Type"),
-  });
-  const propertyKey = "myObjectKey";
-  const propertyValue = {
-    myObjectKey: {
-      myStringKey: "myStringValue",
-    },
-  };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-    rootLinkId,
-  });
-  const newPropertyValue = {
-    myStringKey: "myNewStringValue",
-    myStringKey1: "myNewStringValue1",
-  };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue: newPropertyValue,
-    rootLinkId,
-  });
-  const {
-    data: [myStringKeyLink],
-  } = await deep.select({
-    id: {
-      _id: [rootLinkId, "myObjectKey", "myStringKey"],
-    },
-  });
-  if (!myStringKeyLink) {
-    throw new Error(`Failed to find myStringKeyLink`);
-  }
-  assert.equal(myStringKeyLink.value?.value, newPropertyValue.myStringKey);
-  const {
-    data: [myStringKey1Link],
-  } = await deep.select({
-    id: {
-      _id: [rootLinkId, "myObjectKey", "myStringKey1"],
-    },
-  });
-  assert.equal(myStringKey1Link.value?.value, newPropertyValue.myStringKey1);
+async function objectPropertyTest() {
+  await simpleGenericTest({
+    typeOfProperty: "object",
+  })
 }
 
 async function treeTest() {
@@ -298,10 +214,11 @@ async function treeTest() {
       myStringKey: "myStringValue",
     },
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-    rootLinkId,
+  const obj = {
+    [propertyKey]: propertyValue,
+  };
+  await genericTest({
+    obj: obj,
   });
   const { data: containTreeLinkDownToRoot } = await deep.select({
     up: {
@@ -324,143 +241,23 @@ async function treeTest() {
   );
 }
 
-async function customMethodMakeInsertoperationsForBooleanValue() {
-  const propertyKey = "myStringKey";
-  const propertyValue = true;
-  const {
-    data: [{ id: rootLinkId }],
-  } = await deep.insert({
-    type_id: await deep.id("@deep-foundation/core", "Type"),
-  });
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-    rootLinkId,
-    customMethods: {
-      makeInsertOperationsForBooleanValue,
-    },
-  });
-  const {
-    data: [propertyLink],
-  } = await deep.select({
-    id: {
-      _id: [rootLinkId, propertyKey],
-    },
-  });
-  assert.equal(propertyLink.value?.value, propertyValue.toString());
-
-  async function makeInsertOperationsForBooleanValue(
-    this: any,
-    options: {
-      parentLinkId: number;
-      linkId: number;
-      value: boolean;
-      name: string;
-    },
-  ) {
-    const operations: Array<SerialOperation> = [];
-    const { value, parentLinkId, linkId, name } = options;
-    const log = molduleLog.extend(makeInsertOperationsForBooleanValue.name);
-    log({ options });
-
-    log({ this: this });
-    const linkInsertSerialOperation = createSerialOperation({
-      type: "insert",
-      table: "links",
-      objects: {
-        id: linkId,
-        type_id: await deep.id(this.deep.linkId!, pascalCase(typeof value)),
-        from_id: parentLinkId,
-        to_id: await deep.id("@deep-foundation/boolean", value.toString()),
-      },
-    });
-    operations.push(linkInsertSerialOperation);
-    log({ linkInsertSerialOperation });
-
-    const stringInsertSerialOperation = createSerialOperation({
-      type: "insert",
-      table: "strings",
-      objects: {
-        link_id: linkId,
-        value: value.toString(),
-      },
-    });
-    operations.push(stringInsertSerialOperation);
-    log({ stringInsertSerialOperation });
-
-    const containInsertSerialOperation = createSerialOperation({
-      type: "insert",
-      table: "links",
-      objects: {
-        // TODO: Replace id with idLocal when it work properly
-        type_id: await deep.id("@deep-foundation/core", "Contain"),
-        from_id: parentLinkId,
-        to_id: linkId,
-        string: {
-          data: {
-            value: name,
-          },
-        },
-      },
-    });
-    operations.push(containInsertSerialOperation);
-    log({ containInsertSerialOperation });
-
-    log({ operations });
-
-    return operations;
-  }
-}
-
-async function customRootLinkTest() {
-  const propertyKey = "myStringKey";
-  const propertyValue = "myStringValue";
-  const {
-    data: [{ id: rootLinkId }],
-  } = await deep.insert({
-    type_id: await deep.id("@deep-foundation/core", "Type"),
-  });
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-    rootLinkId,
-  });
-}
-
-async function stringPropertyTest() {
-  const propertyKey = "myStringKey";
-  const propertyValue = "myStringValue";
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-  });
-}
 
 async function numberPropertyTest() {
-  const propertyKey = "myStringKey";
-  const propertyValue = 123;
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-  });
+  await simpleGenericTest({
+    typeOfProperty: "number",
+  })
 }
 
 async function booleanPropertyTest() {
-  const propertyKey = "myBooleanKey";
-  const propertyValue = true;
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-  });
+  await simpleGenericTest({
+    typeOfProperty: "boolean",
+  })
 }
 
 async function arrayPropertyTest() {
-  const propertyKey = "myArrayKey";
-  const propertyValue = ["myString1", "myString2"];
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-  });
+  await simpleGenericTest({
+    typeOfProperty: "array",
+  })
 }
 
 async function objectPropertyWithStringPropertyTest() {
@@ -468,9 +265,11 @@ async function objectPropertyWithStringPropertyTest() {
   const propertyValue = {
     myStringKey: "myStringValue",
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
+  const obj = {
+    [propertyKey]: propertyValue,
+  }
+  await genericTest({
+    obj
   });
 }
 
@@ -479,9 +278,11 @@ async function objectPropertyWithArrayOfStringsPropertyTest() {
   const propertyValue = {
     myArrayKey: ["myString1", "myString2"],
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
+  const obj = {
+    [propertyKey]: propertyValue,
+  }
+  await genericTest({
+    obj
   });
 }
 
@@ -493,9 +294,11 @@ async function objectPropertyWithArrayOfArraysOfStringsPropertyTest() {
       ["myString1", "myString2"],
     ],
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
+  const obj = {
+    [propertyKey]: propertyValue,
+  }
+  await genericTest({
+    obj
   });
 }
 
@@ -511,9 +314,11 @@ async function objectPropertyWithArrayOfObjectsPropertyTest() {
       },
     ],
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
+  const obj = {
+    [propertyKey]: propertyValue,
+  }
+  await genericTest({
+    obj
   });
 }
 
@@ -524,9 +329,11 @@ async function objectPropertyWithObjectPropertyTest() {
       myStringKey: "myStringValue",
     },
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
+  const obj = {
+    [propertyKey]: propertyValue,
+  }
+  await genericTest({
+    obj
   });
 }
 
@@ -537,101 +344,11 @@ async function objectPropertyWithObjectPropertyWithArrayPropertyTest() {
       myStringKey: ["myStringValue", "myStringValue"],
     },
   };
-  await clientHandlerTests({
-    propertyKey,
-    propertyValue,
-  });
-}
-
-async function clientHandlerTests(options: {
-  propertyKey: string;
-  propertyValue: AllowedValue;
-  rootLinkId?: number;
-  customMethods?: Record<string, Function>;
-  resultLinkId?: number;
-}) {
-  const log = molduleLog.extend("clientHandlerTests");
-  const { propertyKey: propertyKey, propertyValue: propertyValue } = options;
-  const packageDeepClientOptions: DeepClientOptions = {
-    apolloClient,
-    ...(await decoratedDeep.login({
-      linkId: decoratedDeep.objectToLinksConverterPackage.idLocal(),
-    })),
-  };
-  const packageDeep = new DeepClient(packageDeepClientOptions);
   const obj = {
     [propertyKey]: propertyValue,
-  };
-
-  const clientHandlerResult = await callClientHandler({
-    deep: decoratedDeep,
-    linkId: decoratedDeep.objectToLinksConverterPackage.clientHandler.idLocal(),
-    args: [
-      {
-        deep: packageDeep,
-        obj: obj,
-        rootLinkId: options.rootLinkId,
-        resultLinkId: options.resultLinkId,
-        customMethods: options.customMethods,
-      },
-    ],
-  });
-  log({ clientHandlerResult });
-  if (clientHandlerResult.error) throw clientHandlerResult.error;
-  assert.notStrictEqual(clientHandlerResult.result?.rootLinkId, undefined);
-  const { rootLinkId, resultLinkId } = clientHandlerResult.result;
-  if (options.rootLinkId) {
-    assert.equal(rootLinkId, options.rootLinkId);
   }
-  if (options.resultLinkId) {
-    assert.equal(resultLinkId, options.resultLinkId);
-  }
-  const {
-    data: [rootLinkFromSelect],
-  } = await decoratedDeep.select(rootLinkId);
-  assert.notStrictEqual(rootLinkFromSelect, undefined);
-
-  const {
-    data: selectData,
-  } = await decoratedDeep.select(resultLinkId);
-  const resultLinkFromSelect = selectData[0] as Link<number>;
-  assert.notStrictEqual(resultLinkFromSelect, undefined);
-
-  const hasResultSelectData: BoolExpLink = {
-    type_id: {
-      _id: ["@deep-foundation/object-to-links-converter", "HasResult"],
-    },
-    from_id: rootLinkId,
-    to_id: resultLinkId,
-  };
-  const {
-    data: [hasResultLink],
-  } = await deep.select(hasResultSelectData);
-  if (!hasResultLink) {
-    throw new Error(
-      `Failed to find hasResultLink by using select with query: ${JSON.stringify(
-        hasResultSelectData,
-        null,
-        2,
-      )}`,
-    );
-  }
-
-  const { data: containTreeLinksDownToResult } = await decoratedDeep.select({
-    up: {
-      tree_id: {
-        _id: ["@deep-foundation/core", "containTree"],
-      },
-      parent_id: resultLinkId,
-    },
-  });
-  assert.notStrictEqual(containTreeLinksDownToResult, undefined);
-  assert.notEqual(containTreeLinksDownToResult.length, 0);
-
-  await checkProperty({
-    name: propertyKey,
-    parentLink: resultLinkFromSelect,
-    value: propertyValue,
+  await genericTest({
+    obj
   });
 }
 
@@ -779,3 +496,106 @@ type CheckNumberPropertyOptions = CheckPropetyOptions<number>;
 type CheckBooleanPropertyOptions = CheckPropetyOptions<boolean>;
 type CheckObjectPropertyOptions = CheckPropetyOptions<AllowedObject>;
 type CheckArrayPropertyOptions = CheckPropetyOptions<AllowedArray>;
+
+// async function customMethodMakeInsertoperationsForBooleanValue() {
+//   const propertyKey = "myStringKey";
+//   const propertyValue = true;
+//   const {
+//     data: [{ id: rootLinkId }],
+//   } = await deep.insert({
+//     type_id: await deep.id("@deep-foundation/core", "Type"),
+//   });
+//   await parseItInsertHandlerTests({
+//     propertyKey,
+//     propertyValue,
+//     rootLinkId,
+//     customMethods: {
+//       makeInsertOperationsForBooleanValue,
+//     },
+//   });
+//   const {
+//     data: [propertyLink],
+//   } = await deep.select({
+//     id: {
+//       _id: [rootLinkId, propertyKey],
+//     },
+//   });
+//   assert.equal(propertyLink.value?.value, propertyValue.toString());
+
+//   async function makeInsertOperationsForBooleanValue(
+//     this: any,
+//     options: {
+//       parentLinkId: number;
+//       linkId: number;
+//       value: boolean;
+//       name: string;
+//     },
+//   ) {
+//     const operations: Array<SerialOperation> = [];
+//     const { value, parentLinkId, linkId, name } = options;
+//     const log = molduleLog.extend(makeInsertOperationsForBooleanValue.name);
+//     log({ options });
+
+//     log({ this: this });
+//     const linkInsertSerialOperation = createSerialOperation({
+//       type: "insert",
+//       table: "links",
+//       objects: {
+//         id: linkId,
+//         type_id: await deep.id(this.deep.linkId!, pascalCase(typeof value)),
+//         from_id: parentLinkId,
+//         to_id: await deep.id("@deep-foundation/boolean", value.toString()),
+//       },
+//     });
+//     operations.push(linkInsertSerialOperation);
+//     log({ linkInsertSerialOperation });
+
+//     const stringInsertSerialOperation = createSerialOperation({
+//       type: "insert",
+//       table: "strings",
+//       objects: {
+//         link_id: linkId,
+//         value: value.toString(),
+//       },
+//     });
+//     operations.push(stringInsertSerialOperation);
+//     log({ stringInsertSerialOperation });
+
+//     const containInsertSerialOperation = createSerialOperation({
+//       type: "insert",
+//       table: "links",
+//       objects: {
+//         // TODO: Replace id with idLocal when it work properly
+//         type_id: await deep.id("@deep-foundation/core", "Contain"),
+//         from_id: parentLinkId,
+//         to_id: linkId,
+//         string: {
+//           data: {
+//             value: name,
+//           },
+//         },
+//       },
+//     });
+//     operations.push(containInsertSerialOperation);
+//     log({ containInsertSerialOperation });
+
+//     log({ operations });
+
+//     return operations;
+//   }
+// }
+
+// async function customRootLinkTest() {
+//   const propertyKey = "myStringKey";
+//   const propertyValue = "myStringValue";
+//   const {
+//     data: [{ id: rootLinkId }],
+//   } = await deep.insert({
+//     type_id: await deep.id("@deep-foundation/core", "Type"),
+//   });
+//   await parseItInsertHandlerTests({
+//     propertyKey,
+//     propertyValue,
+//     rootLinkId,
+//   });
+// }
