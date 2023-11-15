@@ -79,7 +79,7 @@ import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js"
 function processObject(options: {
   deep: SyncDeepClient;
   rootLinkId?: number;
-  obj: Obj;
+  obj: AllowedObject;
   customMethods?: Record<string, Function>;
   resultLinkId?: number;
 }) {
@@ -88,7 +88,7 @@ function processObject(options: {
 
   class ObjectToLinksConverter {
     rootLink: Link<number>;
-    obj: Obj;
+    obj: AllowedObject;
     resultLink: Link<number>;
     deep = deep;
     static requiredPackageNames = {
@@ -731,27 +731,18 @@ function processObject(options: {
 
   interface ObjectToLinksConverterOptions {
     rootLink: Link<number>;
-    obj: Obj;
+    obj: AllowedObject;
     customMethods?: CustomMethods;
     resultLink: Link<number>;
   }
 
   interface ObjectToLinksConverterInitOptions {
-    obj: Obj;
+    obj: AllowedObject;
     rootLinkId?: number;
     customMethods?: CustomMethods;
     resultLinkId?: number;
   }
 
-  type AllowedPrimitive = string | number | boolean;
-
-  interface AllowedObject {
-    [key: string]: AllowedValue;
-  }
-
-  type AllowedArray = Array<AllowedValue>;
-
-  type AllowedValue = AllowedPrimitive | AllowedObject | AllowedArray;
 
   type InsertStringValueOptions = InsertValueOptions<string>;
 
@@ -795,10 +786,6 @@ function processObject(options: {
   type UpdateNumberValueOptions = UpdateValueOptions<number>;
 }
 
-interface Obj {
-  [key: string]: string | number | Obj | boolean;
-}
-
 type SyncDeepClient = RemovePromiseFromMethodsReturnType<DeepClient>;
 
 export type RemovePromiseFromMethodsReturnType<T> = {
@@ -806,3 +793,13 @@ export type RemovePromiseFromMethodsReturnType<T> = {
     ? (...args: any[]) => U
     : T[K];
 };
+
+type AllowedPrimitive = string | number | boolean;
+
+  interface AllowedObject {
+    [key: string]: AllowedValue;
+  }
+
+  type AllowedArray = Array<AllowedValue>;
+
+  type AllowedValue = AllowedPrimitive | AllowedObject | AllowedArray;
