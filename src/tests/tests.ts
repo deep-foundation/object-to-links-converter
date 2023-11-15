@@ -75,6 +75,10 @@ decoratedDeep.minilinks.apply(requiredPackageLinks);
 await test();
 
 async function test() {
+  await parseItTests();
+}
+
+async function parseItTests() {
   await stringPropertyTest();
   await numberPropertyTest();
   await booleanPropertyTest();
