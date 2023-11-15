@@ -176,12 +176,11 @@ function processObject(options: {
       const log = ObjectToLinksConverter.getLogger("convert");
 
       console.time(`${ObjectToLinksConverter.name} updateObjectValue before`);
-      const operations = this.updateObjectValue({
+      this.updateObjectValue({
         link: this.resultLink,
         value: this.obj,
       });
       console.time(`${ObjectToLinksConverter.name} updateObjectValue before`);
-      log({ operations });
 
       // const hasResultTypeLinkId = deep.id(deep.linkId!, "HasResult");
       // const {
@@ -216,15 +215,8 @@ function processObject(options: {
       //   );
       // }
 
-      console.time(`${ObjectToLinksConverter.name} serial before`);
-      const serialResult = deep.serial({
-        operations,
-      });
-      console.time(`${ObjectToLinksConverter.name} serial after`);
-      log({ serialResult });
 
       return {
-        serialResult,
         rootLinkId: this.rootLink.id,
         resultLinkId: this.resultLink.id,
       };
