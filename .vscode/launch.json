@@ -7,9 +7,11 @@
       "request": "launch",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/ts-node",
       "runtimeArgs": [
-        "--transpile-only",
+        // "--transpile-only",
         // if you use esm
-        "--esm"
+        "--esm",
+        "--project",
+        "${workspaceFolder}/tsconfig.json"
       ],
       "program": "${file}",
       "cwd": "${workspaceRoot}",
