@@ -186,7 +186,7 @@ async function simpleGenericTest(option: {
 async function stringPropertyTest() {
   await simpleGenericTest({
     typeOfProperty: "string",
-  })
+  });
 }
 
 async function differentResultLinkResultTest() {
@@ -203,7 +203,7 @@ async function differentResultLinkResultTest() {
 async function objectPropertyTest() {
   await simpleGenericTest({
     typeOfProperty: "object",
-  })
+  });
 }
 
 async function treeTest() {
@@ -245,23 +245,22 @@ async function treeTest() {
   );
 }
 
-
 async function numberPropertyTest() {
   await simpleGenericTest({
     typeOfProperty: "number",
-  })
+  });
 }
 
 async function booleanPropertyTest() {
   await simpleGenericTest({
     typeOfProperty: "boolean",
-  })
+  });
 }
 
 async function arrayPropertyTest() {
   await simpleGenericTest({
     typeOfProperty: "array",
-  })
+  });
 }
 
 async function objectPropertyWithStringPropertyTest() {
@@ -271,9 +270,9 @@ async function objectPropertyWithStringPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
@@ -284,9 +283,9 @@ async function objectPropertyWithArrayOfStringsPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
@@ -300,9 +299,9 @@ async function objectPropertyWithArrayOfArraysOfStringsPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
@@ -320,9 +319,9 @@ async function objectPropertyWithArrayOfObjectsPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
@@ -335,9 +334,9 @@ async function objectPropertyWithObjectPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
@@ -350,9 +349,9 @@ async function objectPropertyWithObjectPropertyWithArrayPropertyTest() {
   };
   const obj = {
     [propertyKey]: propertyValue,
-  }
+  };
   await genericTest({
-    obj
+    obj,
   });
 }
 
