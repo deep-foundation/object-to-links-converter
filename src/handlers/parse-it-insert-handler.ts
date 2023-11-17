@@ -15,13 +15,23 @@ import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js"
   } = options;
   try {
     const result = main();
-    return {
-      result: JSON.stringify(result, jsonStringifyCircularReplacer),
-    };
+    return JSON.stringify(
+      {
+        result: result,
+      },
+      getJsonStringifyCircularReplacer(),
+    );
   } catch (error) {
-    throw {
-      error: JSON.stringify(error, jsonStringifyCircularReplacer),
-    };
+    throw new Error(
+      JSON.stringify(
+        {
+          ...(error instanceof Error
+            ? { errorMessage: error.message, errorStack: error.stack }
+            : {}),
+        },
+        getJsonStringifyCircularReplacer(),
+      ),
+    );
   }
 
   function main() {
@@ -30,7 +40,7 @@ import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js"
     });
     const rootLink = rootLinkSelectData[0] as Link<number>;
     if (!rootLink) {
-      throw new Error(`parseIt.to does not exist: ##${parseItLink.from_id}`);
+      throw new Error(`parseIt.from does not exist: ##${parseItLink.from_id}`);
     }
 
     let obj;
@@ -59,20 +69,6 @@ import { BoolExpLink } from "@deep-foundation/deeplinks/imports/client_types.js"
     });
 
     return result;
-  }
-
-  function jsonStringifyCircularReplacer() {
-    let seen = new WeakSet();
-    let placeholder = {};
-    return (key: any, value: any) => {
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value)) {
-          return placeholder;
-        }
-        seen.add(value);
-      }
-      return value;
-    };
   }
 };
 
@@ -143,6 +139,7 @@ function processObject(options: {
       const log = ObjectToLinksConverter.getLogger(
         ObjectToLinksConverter.init.name,
       );
+      log({ options });
       const { obj } = options;
       const rootLink: Link<number> = options.rootLinkId
         ? (deep.select(options.rootLinkId).data[0] as Link<number>)
@@ -214,7 +211,6 @@ function processObject(options: {
       //     },
       //   );
       // }
-
 
       return {
         rootLinkId: this.rootLink.id,
@@ -380,10 +376,11 @@ function processObject(options: {
     }
 
     insertBooleanValue(options: InsertBooleanOptions) {
-      const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(
         this.insertBooleanValue.name,
       );
+      log({ options });
+      const { value, parentLinkId, name } = options;
 
       const {
         data: [{ id: linkId }],
@@ -395,7 +392,6 @@ function processObject(options: {
           value.toString(),
         ),
       });
-
       log({ linkId });
 
       const {
@@ -413,8 +409,9 @@ function processObject(options: {
       log({ containLinkId });
     }
     insertStringValue(options: InsertStringValueOptions) {
-      const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(this.insertStringValue.name);
+      log({ options });
+      const { value, parentLinkId, name } = options;
 
       const {
         data: [{ id: linkId }],
@@ -446,8 +443,9 @@ function processObject(options: {
     }
 
     insertNumberValue(options: InsertNumberValueOptions) {
-      const { value, parentLinkId, name } = options;
       const log = ObjectToLinksConverter.getLogger(this.insertNumberValue.name);
+      log({ options });
+      const { value, parentLinkId, name } = options;
 
       const {
         data: [{ id: linkId }],
@@ -476,12 +474,13 @@ function processObject(options: {
         },
       });
 
-      log({ linkId });
+      log({ containLinkId });
     }
 
     insertArrayValue(options: InsertArrayValueOptions) {
-      const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(this.insertArrayValue.name);
+      log({ options });
+      const { value, name, parentLinkId } = options;
 
       const {
         data: [{ id: linkId }],
@@ -537,8 +536,9 @@ function processObject(options: {
     }
 
     insertObjectValue(options: InstakObjectValueOptions) {
-      const { value, name, parentLinkId } = options;
       const log = ObjectToLinksConverter.getLogger(this.insertObjectValue.name);
+      log({ options });
+      const { value, name, parentLinkId } = options;
 
       const {
         data: [{ id: linkId }],
@@ -561,7 +561,6 @@ function processObject(options: {
           },
         },
       });
-
       log({ containLinkId });
 
       for (const [propertyKey, propertyValue] of Object.entries(value)) {
@@ -743,7 +742,6 @@ function processObject(options: {
     resultLinkId?: number;
   }
 
-
   type InsertStringValueOptions = InsertValueOptions<string>;
 
   type InsertNumberValueOptions = InsertValueOptions<number>;
@@ -786,6 +784,20 @@ function processObject(options: {
   type UpdateNumberValueOptions = UpdateValueOptions<number>;
 }
 
+function getJsonStringifyCircularReplacer() {
+  let seen = new WeakSet();
+  let placeholder = {};
+  return (key: any, value: any) => {
+    if (typeof value === "object" && value !== null) {
+      if (seen.has(value)) {
+        return placeholder;
+      }
+      seen.add(value);
+    }
+    return value;
+  };
+}
+
 type SyncDeepClient = RemovePromiseFromMethodsReturnType<DeepClient>;
 
 export type RemovePromiseFromMethodsReturnType<T> = {
@@ -796,10 +808,10 @@ export type RemovePromiseFromMethodsReturnType<T> = {
 
 type AllowedPrimitive = string | number | boolean;
 
-  interface AllowedObject {
-    [key: string]: AllowedValue;
-  }
+interface AllowedObject {
+  [key: string]: AllowedValue;
+}
 
-  type AllowedArray = Array<AllowedValue>;
+type AllowedArray = Array<AllowedValue>;
 
-  type AllowedValue = AllowedPrimitive | AllowedObject | AllowedArray;
+type AllowedValue = AllowedPrimitive | AllowedObject | AllowedArray;
